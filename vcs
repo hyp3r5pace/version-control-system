@@ -1,0 +1,4 @@
+#!/usr/bin/env/env python3
+
+import libvcs
+libvcs.main()
