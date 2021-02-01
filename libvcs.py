@@ -13,6 +13,7 @@ def repo_path(repo, *path):
     """Compute path under repo's vcsdir"""
     return os.path.join(repo.vcsdir, *path)
 
+
 def repo_dir(repo, *path, mkdir=False):
     """creates directories mentioned in *path if absent"""
 
@@ -31,12 +32,15 @@ def repo_dir(repo, *path, mkdir=False):
         return None
 
 
+
 def repo_file(repo, *path, mkdir=False):
     """Creates directories to the file mentioned in *path if absent"""
 
     # checks if path to file exist, if not creates using repo_dir() function.
     if repo_dir(repo, *path[:-1], mkdir=mkdir):
         return repo_path(repo, *path)
+
+
 
 # class to define a git repository object
 class vcsRepository(object):
@@ -64,6 +68,42 @@ class vcsRepository(object):
             if vers != 0:
                 raise Exception("Unsupported repositoryformatversion %s" % vers)
     
+
+
+def repo_create(path):
+    """Create a new repository at path"""
+
+    repo = vcsRepository(path, True) # create a vcs repo object
+
+    # first check if path provided exists or is an empty directory
+    if os.path.exists(repo.worktree):
+        if not os.path.isdir(repo.worktree):
+            raise Exception("%s is not a directory" % path)
+        if os.listdir(repo.worktree):
+            raise Exception("%s is not empty" % path)
+    else:
+        os.makedirs(repo.worktree)
+
+    assert(repo_dir(repo, "branches", mkdir=True))
+    assert(repo_dir(repo, "objects", mkdir=True))
+    assert(repo_dir(repo, "refs", "tags", mkdir=True))
+    assert(repo_dir(repo, "refs", "heads", mkdir=True))
+    
+
+    # .vcs/description
+    with open(repo_file(repo, "description"), "w") as f:
+        f.write("Unnamed repository; edit this desscription to name the repository\n")
+    
+    # .vcs/HEAD
+    with open(repo_file(repo, "HEAD"), "w") as f:
+        f.write("ref: refs/heads/master\n")
+    
+    # write default content to vcs config file
+    with open(repo_file(repo, "config"), "w") as f:
+        config = repo_default_config()
+        config.write(f)
+    
+    return repo
 
 
 # command line argument parsing
