@@ -8,17 +8,47 @@ import sys
 import zlib
 import configparser
 
+# utility functions
+def repo_path(repo, *path):
+    """Compute path under repo's vcsdir"""
+    return os.path.join(repo.vcsdir, *path)
 
+def repo_dir(repo, *path, mkdir=False):
+    """creates directories mentioned in *path if absent"""
+
+    path = repo_path(repo, *path)
+
+    if os.path.exists(path):
+        if (os.path.isdir(path)):
+            return path
+        else:
+            raise Exception("Not a directory %s" % path)
+
+    if mkdir:
+        os.makedirs(path)
+        return path
+    else:
+        return None
+
+
+def repo_file(repo, *path, mkdir=False):
+    """Creates directories to the file mentioned in *path if absent"""
+
+    # checks if path to file exist, if not creates using repo_dir() function.
+    if repo_dir(repo, *path[:-1], mkdir=mkdir):
+        return repo_path(repo, *path)
+
+# class to define a git repository object
 class vcsRepository(object):
     """Abstraction of a vcs repository"""
 
     worktree = None
-    gitdir = None
+    vcsdir = None
     conf = None
 
     def __init__(self, path, force=False):
         self.worktree = path
-        self.gitdir = os.path.join(path, ".git")
+        self.vcsdir = os.path.join(path, ".vcs")
 
         #  Read configuration file in .git/config
         self.conf = configparser.ConfigParser()
@@ -34,9 +64,6 @@ class vcsRepository(object):
             if vers != 0:
                 raise Exception("Unsupported repositoryformatversion %s" % vers)
     
-
-
-
 
 
 # command line argument parsing
