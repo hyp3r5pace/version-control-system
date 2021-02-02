@@ -120,6 +120,27 @@ def repo_default_config():
     return ret
 
 
+def repo_find(path=".", required=True):
+    """Method to return path to .vcs directory by looking in current directory or recursively in it's parents"""
+    """Required to prevent creation of redundant .vcs directory for a repo if it's parent directory already has a .vcs directory"""
+
+    path = os.path.realpath(path)
+
+    if os.path.isdir(os.path.join(path,".vcs")):
+        return vcsRepository(path)
+    
+    parent = os.path.realpath(os.path.join(path, ".."))
+
+    if parent == path:
+        # checking the condition when we reach root "/"
+        # "/../" == "/"
+        if required:
+            raise Exception("No .vcs directory")
+        else:
+            return None
+
+    # recursive call  
+    return repo_find(parent, required)
 
 
 # command line argument parsing
