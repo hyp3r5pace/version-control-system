@@ -106,10 +106,38 @@ def repo_create(path):
     return repo
 
 
+def repo_default_config():
+    """Defines the config file structure and returns the configparser object"""
+    # config files is of microsoft INI format
+
+    ret = configparser.ConfigParser()
+
+    ret.add_section("core")
+    ret.set("core", "repositoryformatversion", "0")
+    ret.set("core", "filemode", "false")
+    ret.set("core", "bare", "false")
+
+    return ret
+
+
+
+
 # command line argument parsing
 argparser = argparse.ArgumentParser()
 argsubparsers = argparser.add_subparsers(title="Commands", dest="command")
 argsubparsers.required = True
+
+# agument parser for vcs init terminal command
+argsp = argsubparsers.add_parser("init", help="Initialize a new, empty directory")
+argsp.add_argument("path",
+                   metavar="directory",
+                   nargs="?",
+                   default=".",
+                   help="where to create the repository")
+
+# cmd_* function definitions
+def cmd_init(args):
+    repo_create(args.path)
 
 
 def main(argv = sys.argv[1:]):
