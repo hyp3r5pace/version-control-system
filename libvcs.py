@@ -217,12 +217,30 @@ def object_read(repo, sha):
         return c(repo, raw[y+1:])
 
 
+def object_write(obj, actually_write=True):
+    """Creates the vcs object of input data and writes it to a file in compressed form if actually_write is True"""
+    # Serialize object data
+    data = obj.serialize() # get the content in byte string format
+    # add header
+    result = obj.fmt + b' ' + str(len(data)).encode() + b'\x00' + data
+    # compute hash
+    sha = hashlib.sha1(result).hexdigest()
+
+    if actually_write:
+        path = repo_file(obj.repo, "objetcs", sha[0:2], sha[2:], mkdir=actually_write)
+
+        with open(path, "wb") as f:
+            # compress the data and write
+            f.write(zlib.compress(result))
+    
+    return sha
+
+
 def object_find(repo, name, fmt=None, follow=True):
     """ A name resolution function: Since a vcs object can be refered through various ways such as full hash, short hash,
     tag etc"""
     # unimplemented now (placeholder function) --> will be implemented later
     return name
-
 
 def main(argv = sys.argv[1:]):
     args = argparser.parse_args(argv)
