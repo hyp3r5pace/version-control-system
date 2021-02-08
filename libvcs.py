@@ -143,23 +143,6 @@ def repo_find(path=".", required=True):
     return repo_find(parent, required)
 
 
-# command line argument parsing
-argparser = argparse.ArgumentParser()
-argsubparsers = argparser.add_subparsers(title="Commands", dest="command")
-argsubparsers.required = True
-
-# agument parser for vcs init terminal command
-argsp = argsubparsers.add_parser("init", help="Initialize a new, empty directory")
-argsp.add_argument("path",
-                   metavar="directory",
-                   nargs="?",
-                   default=".",
-                   help="where to create the repository")
-
-# cmd_* function definitions
-def cmd_init(args):
-    repo_create(args.path)
-
 
 # version control system object creation, storage and retrieval functions
 # version control system is a content based file system
@@ -252,6 +235,37 @@ def object_find(repo, name, fmt=None, follow=True):
     tag etc"""
     # unimplemented now (placeholder function) --> will be implemented later
     return name
+
+# command line argument parsing
+argparser = argparse.ArgumentParser()
+argsubparsers = argparser.add_subparsers(title="Commands", dest="command")
+argsubparsers.required = True
+
+# agument parser for vcs init terminal command
+argsp = argsubparsers.add_parser("init", help="Initialize a new, empty directory")
+argsp.add_argument("path",
+                   metavar="directory",
+                   nargs="?",
+                   default=".",
+                   help="where to create the repository")
+
+# add parser for vcs cat-file command and associated arguments
+"""command format:  vcs cat-file TYPE OBJECT"""
+
+argsp = argsubparsers.add_parser("cat-file", help="Provide content of repository object")
+argsp.add_argument("type",
+                   metavar='type',
+                   choices=["blob", "commit", "tag", "tree"],
+                   help="Specify the type")
+argsp.add_argument("object",
+                   metavar="object",
+                   help="The object to display")
+
+
+# cmd_* function definitions
+def cmd_init(args):
+    repo_create(args.path)
+
 
 def main(argv = sys.argv[1:]):
     args = argparser.parse_args(argv)
