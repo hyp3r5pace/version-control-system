@@ -266,6 +266,16 @@ argsp.add_argument("object",
 def cmd_init(args):
     repo_create(args.path)
 
+def cmd_cat_file(args):
+    """Calling function for cat-file command"""
+    repo = repo_find()
+    cat_file(repo, args.object, fmt=args.type.encode())
+
+def cat_file(repo, obj, fmt=None):
+    obj = object_read(repo, object_find(repo, obj, fmt=fmt))
+    sys.stdout.buffer.write(obj.serialize())
+
+
 
 def main(argv = sys.argv[1:]):
     args = argparser.parse_args(argv)
