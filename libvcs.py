@@ -249,17 +249,41 @@ argsp.add_argument("path",
                    default=".",
                    help="where to create the repository")
 
-# add parser for vcs cat-file command and associated arguments
+# subparser for vcs cat-file command and associated arguments
 """command format:  vcs cat-file TYPE OBJECT"""
+"""Reads a object from repository and deserializes it to create a object of class which supports TYPE"""
 
 argsp = argsubparsers.add_parser("cat-file", help="Provide content of repository object")
 argsp.add_argument("type",
                    metavar='type',
                    choices=["blob", "commit", "tag", "tree"],
                    help="Specify the type")
+
 argsp.add_argument("object",
                    metavar="object",
                    help="The object to display")
+
+
+# subparsers for hash-object command and defining associated arguments
+""" command format: vcs hash-object [-w] [-t TYPE] FILE"""
+"""Reads a FILE and computes the hash of the content of the FILE.
+Also, form the object of the corresponding FILE and serialize and store it in repository"""
+
+argsp = argsubparsers.add_parser("hash-object",
+                                 help="Computes object ID and optionally creates a blob from a file")
+argsp.add_argument("-t",
+                   metavar="type",
+                   dest="type",
+                   choices=["blob", "commit", "tag", "tree"],
+                   default="blob",
+                   help="Specify the type of the object needed to form")
+
+argsp.add_argument("-w",
+                   dest="write",
+                   action="store_true",
+                   help="Actually write the object to memory disk, database etc")
+argsp.add_argument("path",
+                   help="Path to the <FILE>")
 
 
 # cmd_* function definitions
