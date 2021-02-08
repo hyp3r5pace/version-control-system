@@ -263,6 +263,10 @@ argsp.add_argument("object",
                    metavar="object",
                    help="The object to display")
 
+def cat_file(repo, obj, fmt=None):
+    obj = object_read(repo, object_find(repo, obj, fmt=fmt))
+    sys.stdout.buffer.write(obj.serialize())
+
 
 # subparsers for hash-object command and defining associated arguments
 """ command format: vcs hash-object [-w] [-t TYPE] FILE"""
@@ -285,6 +289,22 @@ argsp.add_argument("-w",
 argsp.add_argument("path",
                    help="Path to the <FILE>")
 
+def object_hash(fd, fmt, repo=None):
+    """ Function to read the content of a open file, create appropiate object
+        and write the object to vcs directory and return the hash of the file"""
+
+    data = fd.read()
+
+    # choosing constructor on the basis of the object type found in header
+    if fmt == b'commit'     : obj = vcsCommit(repo, data)
+    elif fmt == b'tree'     : obj = vcsTree(repo, data)
+    elif fmt == b'tag'      : obj = vcsTag(repo, data)
+    elif fmt == b'blob'     : obj = vcsBlob(repo, data)
+    else:
+        raise Exception('Unknown type %s!' % fmt)
+
+    return object_write(obj, repo)
+
 
 # cmd_* function definitions
 def cmd_init(args):
@@ -295,10 +315,15 @@ def cmd_cat_file(args):
     repo = repo_find()
     cat_file(repo, args.object, fmt=args.type.encode())
 
-def cat_file(repo, obj, fmt=None):
-    obj = object_read(repo, object_find(repo, obj, fmt=fmt))
-    sys.stdout.buffer.write(obj.serialize())
-
+def cmd_hash_object(args):
+    if args.write:
+        repo = vcsRepository(".")
+    else:
+        repo = None
+    
+    with open(args.path, "rb") as f:
+        sha = object_hash(f, args.type.encode(), repo)
+        print(sha)
 
 
 def main(argv = sys.argv[1:]):
