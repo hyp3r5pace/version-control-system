@@ -186,6 +186,37 @@ class vcsObject(object):
         raise Exception('Unimplemented!!')
 
 
+def object_read(repo, sha):
+    """Read object object_id from vcs repository repo. Return a
+    vcs object whose exact type depends on the object"""
+
+    path = repo_file(repo, "objects", sha[0:2], sha[2:])
+
+    with open(path, "rb") as f:
+        raw = zlib.decompress(f.read())
+
+        # computing the starting position of the whitespace in header of the object file
+        x = raw.find(b' ')
+        fmt = raw[0:x] # the type of object in byte type
+
+        # read and validate object size
+        y = raw.find(b'\x00', x)
+        size = int(raw[x:y].decode("ascii"))
+        if size != len(raw) - y - 1:
+            raise Exception("Malformed object {0}: bad length".format(sha))
+        
+        # picking proper vcs object class
+        if fmt == b'commit' :   c = vcsCommit
+        elif fmt == b'tree' :   c = vcsTree
+        elif fmt == b'tag'  :   c = vcsTag
+        elif fmt == b'blob' :   c = vcsBlob
+        else:
+            raise Exception("Unknown type %s for object %s".format(fmt.decode("ascii"), sha))
+
+        # return object of the class picked above
+        return c(repo, raw[y+1:])
+
+
 
 
 
