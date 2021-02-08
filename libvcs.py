@@ -185,6 +185,17 @@ class vcsObject(object):
     def deserialize(self, data):
         raise Exception('Unimplemented!!')
 
+# subclass of vcsobject class (inheritance from vcsObject class)
+class vcsBlob(vcsObject):
+    fmt = b'blob'
+     
+    def serialize(self):
+         return self.blobdata
+    
+    def deserialize(self, data):
+        self.blobdata = data
+
+
 
 def object_read(repo, sha):
     """Read object object_id from vcs repository repo. Return a
