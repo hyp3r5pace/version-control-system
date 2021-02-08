@@ -217,7 +217,11 @@ def object_read(repo, sha):
         return c(repo, raw[y+1:])
 
 
-
+def object_find(repo, name, fmt=None, follow=True):
+    """ A name resolution function: Since a vcs object can be refered through various ways such as full hash, short hash,
+    tag etc"""
+    # unimplemented now (placeholder function) --> will be implemented later
+    return name
 
 
 def main(argv = sys.argv[1:]):
