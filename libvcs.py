@@ -161,6 +161,34 @@ def cmd_init(args):
     repo_create(args.path)
 
 
+# version control system object creation, storage and retrieval functions
+# version control system is a content based file system
+# a vcs object is a file whose path or address is computed from it's content
+# vcs objects are of various types such as commmit, file or content, tag etc.
+
+class vcsObject(object):
+    repo = None
+    
+    def __init__(self, repo, data=None):
+        self.repo = repo
+        
+        if data != None:
+            self.deserialize(data)
+    
+    def serialize(self):
+        """ This function must be implemented by various subclasses.
+        Since, objects are of different types on the basis of the data it is storing, different object types are required
+        and thus different function and classes"""
+        """Read objects content from self.data, a byte string, and do whatever it takes to convert it to a meaningful representation"""
+        raise Exception("Unimplemented!!")
+
+    def deserialize(self, data):
+        raise Exception('Unimplemented!!')
+
+
+
+
+
 def main(argv = sys.argv[1:]):
     args = argparser.parse_args(argv)
 
