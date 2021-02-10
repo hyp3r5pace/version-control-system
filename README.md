@@ -13,32 +13,33 @@ Version control system implemented in python
 ## List of commands
 
 - ### vcs init
-    command format: vcs init <directory path>
+    command format: vcs init \<directory path>
+
     This command helps to convert a directory to a repository by creating a vcs subdirectory. vcs subdirectory is named as .vcs and it contains all the commit objects, blobs, tree objects and configuration information. Thus, .vcs directory stores all the changes made in the working tree of the repository. All the commands use the data available in .vcs directory to perform approiate action.
 
     #### Directory structure
 
-    root (of directory)
-    |
-    |_ _ working tree files/sub directories
-    |
-    |_ _ .vcs (vcs directory)
-          |
-          |_ _ config (file which stores configuration info which is used by vcs program)
-          |
-          |_ _ HEAD (file which stores the location of the object storing the latest commit)
-          |
-          |_ _ objects (directory --> holds all the objects which are serialized and stored in memory)
-          |
-          |_ _branches (directory)
-          |
-          |_ _ refs (directory)
-          |    |
-          |    |_ _ tags (directory)
-          |    |
-          |    |_ _ heads (directory)
-          |
-          |_ _ description (file which stores the description of the repository)
+    root (of directory)  
+    |  
+    |_ _ working tree files/sub directories  
+    |  
+    |_ _ .vcs (vcs directory)  
+          |  
+          |_ _ config (file which stores configuration info which is used by vcs program)  
+          |  
+          |_ _ HEAD (file which stores the location of the object storing the latest commit)  
+          |  
+          |_ _ objects (directory --> holds all the objects which are serialized and stored in memory)  
+          |  
+          |_ _branches (directory)  
+          |  
+          |_ _ refs (directory)  
+          |    |  
+          |    |_ _ tags (directory)  
+          |    |  
+          |    |_ _ heads (directory)  
+          |  
+          |_ _ description (file which stores the description of the repository)  
     
 - ### vcs hash-object
     command format: vcs hash-object [-w] [-t TYPE] FILE
@@ -54,7 +55,7 @@ Version control system implemented in python
 
     Every object which is serialized and stored as the file in the directory .vcs/object follows a generic format.
     The format is:
-    <header> + <whitespace> + <object size> + <null separator (0x00)> + <byte string of the object>
+    \<header> + \<whitespace> + \<object size> + \<null separator (0x00)> + \<byte string of the object>
     The content of the file is in byte string format.
 
 - ### vcs cat-file
