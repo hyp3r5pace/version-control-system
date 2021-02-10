@@ -32,9 +32,9 @@ Version control system implemented in python
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|  
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|_ _ objects (directory --> holds all the objects which are serialized and stored in memory)  
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|  
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|_ _branches (directory)  
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|_ _ branches (directory)  
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|  
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|_ _refs (directory)  
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|_ _ refs (directory)  
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;|  
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;|_ _ tags (directory)  
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;|  
