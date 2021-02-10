@@ -26,21 +26,21 @@ Version control system implemented in python
     |  
     |_ _ .vcs (vcs directory)  
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|  
-          |_ _ config (file which stores configuration info which is used by vcs program)  
-          |  
-          |_ _ HEAD (file which stores the location of the object storing the latest commit)  
-          |  
-          |_ _ objects (directory --> holds all the objects which are serialized and stored in memory)  
-          |  
-          |_ _branches (directory)  
-          |  
-          |_ _ refs (directory)  
-          |    |  
-          |    |_ _ tags (directory)  
-          |    |  
-          |    |_ _ heads (directory)  
-          |  
-          |_ _ description (file which stores the description of the repository)  
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|_ _ config (file which stores configuration info which is used by vcs program)  
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|  
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|_ _ HEAD (file which stores the location of the object storing the latest commit)  
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|  
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|_ _ objects (directory --> holds all the objects which are serialized and stored in memory)  
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|  
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|_ _branches (directory)  
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|  
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|_ _ refs (directory)  
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|    |  
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|    |_ _ tags (directory)  
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|    |  
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|    |_ _ heads (directory)  
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|  
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|_ _ description (file which stores the description of the repository)  
     
 - ### vcs hash-object
     ```
