@@ -34,11 +34,11 @@ Version control system implemented in python
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|  
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|_ _branches (directory)  
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|  
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|_ _ refs (directory)  
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|_ _refs (directory)  
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;|  
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|    |_ _ tags (directory)  
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|    |  
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|    |_ _ heads (directory)  
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;|_ _ tags (directory)  
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;|  
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;|_ _ heads (directory)  
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|  
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|_ _ description (file which stores the description of the repository)  
     
