@@ -221,7 +221,7 @@ def object_write(obj, actually_write=True):
     sha = hashlib.sha1(result).hexdigest()
 
     if actually_write:
-        path = repo_file(obj.repo, "objetcs", sha[0:2], sha[2:], mkdir=actually_write)
+        path = repo_file(obj.repo, "objects", sha[0:2], sha[2:], mkdir=actually_write)
 
         with open(path, "wb") as f:
             # compress the data and write
