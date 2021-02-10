@@ -54,8 +54,10 @@ Version control system implemented in python
     - **tag**: These objects store the tag data.
 
     Every object which is serialized and stored as the file in the directory .vcs/object follows a generic format.
-    The format is:
+    The format is:  
+    ```
     \<header> + \<whitespace> + \<object size> + \<null separator (0x00)> + \<byte string of the object>
+    ```
     The content of the file is in byte string format.
 
 - ### vcs cat-file
