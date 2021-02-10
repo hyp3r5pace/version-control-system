@@ -25,7 +25,7 @@ Version control system implemented in python
     |_ _ working tree files/sub directories  
     |  
     |_ _ .vcs (vcs directory)  
-    &nbsp&nbsp|  
+    &nbsp;&nbsp;|  
           |_ _ config (file which stores configuration info which is used by vcs program)  
           |  
           |_ _ HEAD (file which stores the location of the object storing the latest commit)  
