@@ -13,8 +13,9 @@ Version control system implemented in python
 ## List of commands
 
 - ### vcs init
-    command format: vcs init \<directory path>
-
+    ```
+    command format: vcs init <directory path>
+    ```  
     This command helps to convert a directory to a repository by creating a vcs subdirectory. vcs subdirectory is named as .vcs and it contains all the commit objects, blobs, tree objects and configuration information. Thus, .vcs directory stores all the changes made in the working tree of the repository. All the commands use the data available in .vcs directory to perform approiate action.
 
     #### Directory structure
@@ -42,8 +43,9 @@ Version control system implemented in python
           |_ _ description (file which stores the description of the repository)  
     
 - ### vcs hash-object
+    ```
     command format: vcs hash-object [-w] [-t TYPE] FILE
-    
+    ```  
     This command reads a file and computes the hash of the content of the file.
     if -w flag is provided, then the file is content of the file is converted to a vcs object which is then serialized and then compressed and then stored in the .vcs/objects directory.
 
@@ -56,7 +58,7 @@ Version control system implemented in python
     Every object which is serialized and stored as the file in the directory .vcs/object follows a generic format.
     The format is:  
     ```
-    \<header> + \<whitespace> + \<object size> + \<null separator (0x00)> + \<byte string of the object>
+    <header> + <whitespace> + <object size> + <null separator (0x00)> + <byte string of the object>
     ```
     The content of the file is in byte string format.
 
