@@ -179,62 +179,7 @@ class vcsBlob(vcsObject):
         self.blobdata = data
 
 
-
-def object_read(repo, sha):
-    """Read object object_id from vcs repository repo. Return a
-    vcs object whose exact type depends on the object"""
-
-    path = repo_file(repo, "objects", sha[0:2], sha[2:])
-
-    with open(path, "rb") as f:
-        raw = zlib.decompress(f.read())
-
-        # computing the starting position of the whitespace in header of the object file
-        x = raw.find(b' ')
-        fmt = raw[0:x] # the type of object in byte type
-
-        # read and validate object size
-        y = raw.find(b'\x00', x)
-        size = int(raw[x:y].decode("ascii"))
-        if size != len(raw) - y - 1:
-            raise Exception("Malformed object {0}: bad length".format(sha))
-        
-        # picking proper vcs object class
-        if fmt == b'commit' :   c = vcsCommit
-        elif fmt == b'tree' :   c = vcsTree
-        elif fmt == b'tag'  :   c = vcsTag
-        elif fmt == b'blob' :   c = vcsBlob
-        else:
-            raise Exception("Unknown type %s for object %s".format(fmt.decode("ascii"), sha))
-
-        # return object of the class picked above
-        return c(repo, raw[y+1:])
-
-
-def object_write(obj, actually_write=True):
-    """Creates the vcs object of input data and writes it to a file in compressed form if actually_write is True"""
-    # Serialize object data
-    data = obj.serialize() # get the content in byte string format
-    # add header
-    result = obj.fmt + b' ' + str(len(data)).encode() + b'\x00' + data
-    # compute hash
-    sha = hashlib.sha1(result).hexdigest()
-
-    if actually_write:
-        path = repo_file(obj.repo, "objects", sha[0:2], sha[2:], mkdir=actually_write)
-
-        with open(path, "wb") as f:
-            # compress the data and write
-            f.write(zlib.compress(result))
-    
-    return sha
-
-
-def object_find(repo, name, fmt=None, follow=True):
-    """ A name resolution function: Since a vcs object can be refered through various ways such as full hash, short hash,
-    tag etc"""
-    # unimplemented now (placeholder function) --> will be implemented later
-    return name
+# commit, tag content parser functions
 
 def keyValueMessageParser(original, start=0, dct=None):
     """Recursive function which parses a commit or a tag message and extracts key value pairs and messages"""
@@ -295,7 +240,65 @@ def keyValueMessageSerialize(keyValueDict):
     res += b'\n' + keyValueDict[b'']
 
     return res
+
+
+
+def object_read(repo, sha):
+    """Read object object_id from vcs repository repo. Return a
+    vcs object whose exact type depends on the object"""
+
+    path = repo_file(repo, "objects", sha[0:2], sha[2:])
+
+    with open(path, "rb") as f:
+        raw = zlib.decompress(f.read())
+
+        # computing the starting position of the whitespace in header of the object file
+        x = raw.find(b' ')
+        fmt = raw[0:x] # the type of object in byte type
+
+        # read and validate object size
+        y = raw.find(b'\x00', x)
+        size = int(raw[x:y].decode("ascii"))
+        if size != len(raw) - y - 1:
+            raise Exception("Malformed object {0}: bad length".format(sha))
+        
+        # picking proper vcs object class
+        if fmt == b'commit' :   c = vcsCommit
+        elif fmt == b'tree' :   c = vcsTree
+        elif fmt == b'tag'  :   c = vcsTag
+        elif fmt == b'blob' :   c = vcsBlob
+        else:
+            raise Exception("Unknown type %s for object %s".format(fmt.decode("ascii"), sha))
+
+        # return object of the class picked above
+        return c(repo, raw[y+1:])
+
+
+def object_write(obj, actually_write=True):
+    """Creates the vcs object of input data and writes it to a file in compressed form if actually_write is True"""
+    # Serialize object data
+    data = obj.serialize() # get the content in byte string format
+    # add header
+    result = obj.fmt + b' ' + str(len(data)).encode() + b'\x00' + data
+    # compute hash
+    sha = hashlib.sha1(result).hexdigest()
+
+    if actually_write:
+        path = repo_file(obj.repo, "objects", sha[0:2], sha[2:], mkdir=actually_write)
+
+        with open(path, "wb") as f:
+            # compress the data and write
+            f.write(zlib.compress(result))
     
+    return sha
+
+
+def object_find(repo, name, fmt=None, follow=True):
+    """ A name resolution function: Since a vcs object can be refered through various ways such as full hash, short hash,
+    tag etc"""
+    # unimplemented now (placeholder function) --> will be implemented later
+    return name
+
 
 # command line argument parsing
 argparser = argparse.ArgumentParser()
