@@ -252,7 +252,6 @@ class vcsCommit(vcsObject):
         self.commitData = keyValueMessageParser(data)
 
 
-
 def object_read(repo, sha):
     """Read object object_id from vcs repository repo. Return a
     vcs object whose exact type depends on the object"""
@@ -380,8 +379,45 @@ def object_hash(fd, fmt, repo=None):
     return object_write(obj, repo)
 
 
+# subparser for vcs log command
+argsp = argsubparsers.add_parser("log",
+                                 help="Display history starting from a given commit")
+argsp.add_argument("commit",
+                   default="HEAD",
+                   nargs="?",
+                   help="commit to start at.")
+
+def logGraph(repo, sha, seen):
+    """ Function to print the log of commits by traversing the graph"""
+    # seen is a set which stores all the commits which are already visited, thus preventing any circular loop situation in
+    # graph traveral.
+    if sha in seen:
+        return
+    seen.add(sha)
+
+    commit = object_read(repo, sha)
+    # assertion to check, if the object desrialized is a commit object
+    assert(commit.fmt == b'commit')
+
+    if not b'parent' in commit.commitData.keys():
+        # the first commit
+        return
+    
+    parents = commit.commitData[b'parent']
+
+    if type(parents) != list:
+        parents = [parents]
+    
+    for p in parents:
+        # as data is kept in objects in byte string format
+        p = p.decode('ascii')
+        print("c_{0} <- c_{1}".format(sha, p))
+        logGraph(repo, p, seen)
+
+
 # cmd_* function definitions
 def cmd_init(args):
+    """calling function for init command"""
     repo_create(args.path)
 
 def cmd_cat_file(args):
@@ -390,6 +426,7 @@ def cmd_cat_file(args):
     cat_file(repo, args.object, fmt=args.type.encode())
 
 def cmd_hash_object(args):
+    """calling function for hash-object command"""
     if args.write:
         repo = vcsRepository(".")
     else:
@@ -398,6 +435,15 @@ def cmd_hash_object(args):
     with open(args.path, "rb") as f:
         sha = object_hash(f, args.type.encode(), repo)
         print(sha)
+
+def cmd_log(args):
+    """Calling function for log command"""
+    repo = repo_find()
+    print("digraph vcslog{")
+    logGraph(repo, object_find(repo, args.commit), set())
+    print("}")
+
+
 
 
 def main(argv = sys.argv[1:]):
