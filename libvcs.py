@@ -241,6 +241,16 @@ def keyValueMessageSerialize(keyValueDict):
 
     return res
 
+# subclass of vcs commit --> represents the commits
+class vcsCommit(vcsObject):
+    fmt=b'commit'
+
+    def serialize(self, data):
+        return keyValueMessageSerialize(self.commitData)
+    
+    def deserialize(self, data):
+        self.commitData = keyValueMessageParser(data)
+
 
 
 def object_read(repo, sha):
