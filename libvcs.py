@@ -236,6 +236,46 @@ def object_find(repo, name, fmt=None, follow=True):
     # unimplemented now (placeholder function) --> will be implemented later
     return name
 
+def keyValueMessageParser(original, start=0, dct=None):
+    """Recursive function which parses a commit or a tag message and extracts key value pairs and messages"""
+    if not dct:
+        dct = collections.OrderedDict()
+
+    # original is a byte string of the commit or tag message
+    spaceIndex = original.find(b' ', start)
+    newlineIndex = original.find(b'\n', start)
+
+    # if newline arrives before space, then the line must be a empty line
+    # thus, it means remainder of the data is a message
+    # the if case handles the situation when a blank line is reached and strings after this will be the message 
+    if (spaceIndex < 0 or newlineIndex < spaceIndex):
+        assert(newlineIndex == start)
+        dct[b''] = original[start+1:]
+        return dct
+
+    # handling the case before blank line is reached, thus parsing key value is needed
+    key = original[start:spaceIndex]
+    end = start
+    while True:
+        end = original.find(b'\n', end+1)
+        if original[end+1] != ord(' '):
+            break
+    
+    value = original[spaceIndex+1:end]
+    value.replace(b'\n ', b'\n')
+
+    if key in dct:
+        if type(dct[key]) == list:
+            dct[key].append(value)
+        else:
+            dct[key] = [dct[key], value]
+    else:
+        dct[key] = [value]
+    
+    # recursive function to extract the next key value pair or message
+    return keyValueMessageParser(original, end+1, dct)
+
+
 # command line argument parsing
 argparser = argparse.ArgumentParser()
 argsubparsers = argparser.add_subparsers(title="Commands", dest="command")
@@ -329,7 +369,7 @@ def cmd_hash_object(args):
 def main(argv = sys.argv[1:]):
     args = argparser.parse_args(argv)
 
-    if args.command == "add"                 : cmd_add(args)
+    if args.command == "add"                   : cmd_add(args)
     elif args.command == "cat-file"            : cmd_cat_file(args)
     elif args.command == "checkout"            : cmd_checkout(args)
     elif args.command == "commit"              : cmd_commit(args)
