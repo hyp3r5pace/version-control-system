@@ -390,7 +390,7 @@ argsp.add_argument("commit",
 def logGraph(repo, sha, seen):
     """ Function to print the log of commits by traversing the graph"""
     # seen is a set which stores all the commits which are already visited, thus preventing any circular loop situation in
-    # graph traveral.
+    # graph traversal.
     if sha in seen:
         return
     seen.add(sha)
