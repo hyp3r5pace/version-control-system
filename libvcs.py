@@ -275,6 +275,27 @@ def keyValueMessageParser(original, start=0, dct=None):
     # recursive function to extract the next key value pair or message
     return keyValueMessageParser(original, end+1, dct)
 
+def keyValueMessageSerialize(keyValueDict):
+    """Function which forms the original commit message from the keyValue dictionary formed by keyvalueParser()"""
+    res = b''
+
+    for keys in keyValueDict.keys():
+        if (keys == b''):
+            continue
+        
+        val = keyValueDict[keys]
+        if type(val) != list:
+            val = [val]
+        
+        # adding the key value pairs and recreating the original format
+        for elements in val:
+            res += keys + b' ' + elements.replace(b'\n', b'\n ') + b'\n'
+        
+    # adding the blank line and the message after
+    res += b'\n' + keyValueDict[b'']
+
+    return res
+    
 
 # command line argument parsing
 argparser = argparse.ArgumentParser()
