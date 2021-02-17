@@ -7,7 +7,7 @@ Version control system implemented in python
 - [X] vcs hash-object --> command to create object-ID of a file, commit etc and optionally store it in database/memory disk.
 - [X] vcs cat-file  --> command to create appropiate vcs python object (deserialize) from serialized vcs objects stored in files
 - [ ] vcs commit --> function to form commit and write it in log
-- [ ] vcs log --> function to get commit history
+- [X] vcs log --> function to get commit history
 
 
 ## List of commands
@@ -63,7 +63,14 @@ Version control system implemented in python
     The content of the file is in byte string format.
 
 - ### vcs cat-file
+    ```
     command format: vcs cat-file TYPE OBJECT
-    
+    ``` 
     This command reads a file storing the serialized object and then deserializes it into a python object of class TYPE.
     This command does the opposite of what command hash-object does. While deserializing, this command checks if object size matches the size mentioned in file, thus, data malformation is detected.
+
+- ### vcs log
+    ```
+    command format: vcs log <commit hash>
+    ```
+    This command displays the commit history in a repository starting from the commit whose hash value is passed as the argument. At this point, commit information is not displayed but further commit information can be displayed by passing the commit hash to the vcs cat-file function.
