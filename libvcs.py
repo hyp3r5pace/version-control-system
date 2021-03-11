@@ -309,6 +309,36 @@ def object_find(repo, name, fmt=None, follow=True):
     return name
 
 
+# class for tree
+class vcsTreeLeaf(object):
+    """Wrapper class to a single record"""
+    def __init__(self, mode, path, sha):
+        self.mode = mode
+        self.path = path
+        self.sha = sha
+
+def tree_parse_one(raw, start=0):
+    """ Function to parse a single record in the tree object"""
+    # finding the space terminator of the mode
+    x = raw.find(b' ', start)
+    # checking if mode provided is correct or not
+    assert(x-start == 5 or x-start == 6)
+
+    # read the mode
+    mode = raw[start:x]
+
+    # finding the NULL terminator of the path
+    y = raw.find(b'\x00', x)
+    # and read the path
+    path = raw[x+1:y]
+
+    # Read the SHA and convert to an hex string
+    sha = hex(int.from_bytes(raw[y+1:y+21], "big"))
+    # removing the "0x" substring from the starting of the hex string
+    sha = sha[2:]
+
+    return y+21, vcsTreeLeaf(mode, path, sha)
+
 # command line argument parsing
 argparser = argparse.ArgumentParser()
 argsubparsers = argparser.add_subparsers(title="Commands", dest="command")
@@ -390,7 +420,7 @@ argsp.add_argument("commit",
 def logGraph(repo, sha, seen):
     """ Function to print the log of commits by traversing the graph"""
     # seen is a set which stores all the commits which are already visited, thus preventing any circular loop situation in
-    # graph traversal.
+    # graph travers al.
     if sha in seen:
         return
     seen.add(sha)
