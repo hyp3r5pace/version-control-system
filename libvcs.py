@@ -339,6 +339,17 @@ def tree_parse_one(raw, start=0):
 
     return y+21, vcsTreeLeaf(mode, path, sha)
 
+def parse_tree(raw):
+    """ Function to parse the whole tree"""
+    pos = 0
+    max_len = len(raw)
+    res = list()
+    while pos < max_len:
+        pos, data = tree_parse_one(raw, pos)
+        res.append(data)
+    
+    return res
+
 # command line argument parsing
 argparser = argparse.ArgumentParser()
 argsubparsers = argparser.add_subparsers(title="Commands", dest="command")
