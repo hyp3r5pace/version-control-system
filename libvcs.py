@@ -309,7 +309,7 @@ def object_find(repo, name, fmt=None, follow=True):
     return name
 
 
-# class for tree
+# wrapper class for a single record in the tree
 class vcsTreeLeaf(object):
     """Wrapper class to a single record"""
     def __init__(self, mode, path, sha):
@@ -349,6 +349,32 @@ def parse_tree(raw):
         res.append(data)
     
     return res
+
+def tree_serialize(obj):
+    """Function to serialize a tree object"""
+    res = b''
+    for i in obj.items:
+        res += i.mode
+        res += b' '
+        res += i.path
+        res += b'\x00'
+        sha = int(i.sha, 16)
+        res += sha.to_bytes(20, byteorder="big")
+    
+    return res
+
+# class for vcs tree
+class vcsTree(vcsObject):
+    """Class for vcs tree"""
+    # inherited from vcsObject class
+    fmt = b'tree'
+
+    def deserialize(self, data):
+        self.items = parse_tree(data)
+
+    def serialize(self):
+        return tree_serialize(self)
+
 
 # command line argument parsing
 argparser = argparse.ArgumentParser()
