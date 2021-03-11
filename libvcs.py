@@ -376,6 +376,8 @@ class vcsTree(vcsObject):
         return tree_serialize(self)
 
 
+
+
 # command line argument parsing
 argparser = argparse.ArgumentParser()
 argsubparsers = argparser.add_subparsers(title="Commands", dest="command")
@@ -481,6 +483,12 @@ def logGraph(repo, sha, seen):
         print("c_{0} <- c_{1}".format(sha, p))
         logGraph(repo, p, seen)
 
+# subparser for ls-tree command
+"""command format: vcs ls-tree [object]"""
+""" This commands pretty prints the tree object provided as argument""" 
+argsp = argsubparsers.add_parser("ls-tree", help="Print a tree object")
+argsp.add_argument("object", help="The tree object hash value")
+
 
 # cmd_* function definitions
 def cmd_init(args):
@@ -510,6 +518,17 @@ def cmd_log(args):
     logGraph(repo, object_find(repo, args.commit), set())
     print("}")
 
+def cmd_ls_tree(args):
+    """ Calling function for ls-tree command"""
+    repo = repo_find()
+    obj = object_read(repo, object_find(repo, args.object, fmt=b'tree'))
+
+    for item in obj.items:
+        print("{0} {1} {2}\t{3}".format(
+            "0" * (6 - len(item.mode)) + item.mode.decode("ascii"),
+            object_read(repo, item.sha).fmt.decode("ascii"),
+            item.sha,
+            item.path.decode("ascii")))
 
 
 
