@@ -449,6 +449,8 @@ def object_hash(fd, fmt, repo=None):
 
 
 # subparser for vcs log command
+"""command format: vcs log [commit]"""
+""" This command print the commit history starting from the commit passed as argument"""
 argsp = argsubparsers.add_parser("log",
                                  help="Display history starting from a given commit")
 argsp.add_argument("commit",
