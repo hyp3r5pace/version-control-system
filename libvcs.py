@@ -499,6 +499,20 @@ argsp = argsubparsers.add_parser("checkout", help="Checkout a commit inside of a
 argsp.add_argument("commit", help="The commit or tree associated with commit to be checked out")
 argsp.add_argument("path", help="The empty directory where the tree will be instantiated")
 
+def tree_checkout(repo, tree, path):
+    """Recursively instantiates a tree during checkout into a empty directory"""
+    for item in tree.items:
+        obj = object_read(repo, item.sha)
+        dest = os.path.join(path, item.path)
+
+        if obj.fmt == b'tree':
+            os.mkdir(dest)
+            # recursively call if the object is tree
+            tree_checkout(repo, obj, dest)
+        elif obj.fmt == b'blob':
+            with open(dest, 'wb') as f:
+                f.write(obj.blobdata)
+
 
 # cmd_* function definitions
 def cmd_init(args):
