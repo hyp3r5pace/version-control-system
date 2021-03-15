@@ -493,9 +493,12 @@ argsp.add_argument("object", help="The tree object hash value")
 
 
 # subparser for checkout command
+"""command format: vcs checkout [commit] [path]"""
+"""This commands checkouts a commit or a tree object represented by the commit into a empty directory"""
 argsp = argsubparsers.add_parser("checkout", help="Checkout a commit inside of a empty directory")
 argsp.add_argument("commit", help="The commit or tree associated with commit to be checked out")
 argsp.add_argument("path", help="The empty directory where the tree will be instantiated")
+
 
 # cmd_* function definitions
 def cmd_init(args):
@@ -538,6 +541,26 @@ def cmd_ls_tree(args):
             item.path.decode("ascii")))
 
 
+def cmd_checkout(args):
+    """ Calling function for vcs checkout command"""
+    repo = repo_find()
+    # deserializing the commit byte data and forming the commit object
+    obj = object_read(repo, object_find(repo, args.commit))
+
+    # deserializing the tree byte object mentioned in commit object
+    if obj.fmt == b'commit':
+        obj = object_read(repo, obj.commitData[b'tree'].decode("ascii"))
+    
+    # verify that the path mentioned in the argument is empty
+    if os.path.exists(args.path):
+        if not os.path.isdir(args.path):
+            raise Exception("{0} is not a directory".format(args.path))
+        if os.listdir(args.path):
+            raise Exception("Directory is not empty")
+    else:
+        os.makedirs(args.path)
+    
+    tree_checkout(repo, obj, os.path.realpath(args.path).encode())
 
 def main(argv = sys.argv[1:]):
     args = argparser.parse_args(argv)
