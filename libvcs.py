@@ -513,6 +513,9 @@ def tree_checkout(repo, tree, path):
             with open(dest, 'wb') as f:
                 f.write(obj.blobdata)
 
+# subparser for commit command
+argsp = argsubparsers.add_parser("commit", help="Commit the current state of the working directory")
+argsp.add_argument("message", help="mention the commit message")
 
 # cmd_* function definitions
 def cmd_init(args):
