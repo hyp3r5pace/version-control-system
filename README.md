@@ -9,6 +9,7 @@ Version control system implemented in python
 - [X] vcs commit --> command to form commit and write it in log
 - [X] vcs log --> command to get commit history
 - [X] vcs ls-tree --> command to pretty print a tree object
+- [x] vcs checkout --> command to instantiate a tree in the file system (tree represented by a commit)
 
 
 ## List of commands
