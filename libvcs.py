@@ -492,6 +492,11 @@ argsp = argsubparsers.add_parser("ls-tree", help="Print a tree object")
 argsp.add_argument("object", help="The tree object hash value")
 
 
+# subparser for checkout command
+argsp = argsubparsers.add_parser("checkout", help="Checkout a commit inside of a empty directory")
+argsp.add_argument("commit", help="The commit or tree associated with commit to be checked out")
+argsp.add_argument("path", help="The empty directory where the tree will be instantiated")
+
 # cmd_* function definitions
 def cmd_init(args):
     """calling function for init command"""
