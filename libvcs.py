@@ -524,22 +524,30 @@ def createTree(path=None):
     content = os.listdir(path)
     treeContent = list()
     for files in content:
-        dest = os.path.join(path, content)
+        dest = os.path.join(path, files)
         if os.path.isfile(dest):
             with open(dest, "rb") as f:
                 data = f.read()
             blobObj = vcsBlob(repo, data)
             sha = object_write(blobObj)
-            mode = os.stat(dest).encode()
+            mode = str(os.stat(dest).st_mode).encode()
             leafObj = vcsTreeLeaf(mode, dest.encode(), sha)
             treeContent.append(leafObj)
         else:
             # when the given files is a directory
-            pass
+            if files != ".vcs":
+                leafObj = createTree(dest)
+                treeContent.append(leafObj)
+    
     treeObj = vcsTree(repo)
     treeObj.items = treeContent
-    return treeObj
-    
+    sha = object_write(treeObj)
+    if path is None:
+        return sha
+    else:
+        mode = str(os.stat(path).st_mode).encode()
+        leafObj = vcsTreeLeaf(mode, path.encode(), sha)
+        return leafObj
 
 
 # cmd_* function definitions
@@ -610,7 +618,7 @@ def cmd_commit(args):
         raise Exception("Commit message is empty")
     
     treeHash = createTree()
-
+    
     
 
 
