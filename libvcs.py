@@ -555,6 +555,19 @@ def createTree(path=None, actually_write=True):
         return leafObj
 
 
+def getObjectFormat(repo, sha):
+    """Returns the object format of the object represented by hash"""
+    """NOTE: hash has to be a full sha"""
+    path = repo_file(repo, "objects", sha[0:2], sha[2:])
+    with open(path, "rb") as f:
+        raw = zlib.decompress(f.read())
+
+        # computing the starting position of the whitespace in header of the object file
+        x = raw.find(b' ')
+        fmt = raw[0:x].decode("ascii") # the type of object in ascii string
+    return fmt
+
+
 # cmd_* function definitions
 def cmd_init(args):
     """calling function for init command"""
@@ -621,9 +634,28 @@ def cmd_commit(args):
     """calling function for vcs commit function"""
     if not args.message:
         raise Exception("Commit message is empty")
-    
+    repo = repo_find()
+
     treeHash = createTree()
+    headPath = os.path.join(repo, "HEAD")
+    if not os.path.exists(headPath):
+        raise Exception("{0} doesn't exist".format(headPath))
+    if not os.path.isfile(headPath):
+        raise Exception("{0} is not a file".format(headPath))
+
+    f = open(headPath)
+    headCommitHash = f.read()
     
+    # check if the commit hash (sha-1) exists or not
+    if not os.path.isfile(os.path.join(repo, "objects", headCommitHash[:2])):
+        raise Exception("Commit pointed by HEAD --> {0} doesn't exist".format(headCommitHash))
+    # check if the hash in HEAD is a commit object hash
+    fmt = getObjectFormat(repo, headCommitHash)
+    if fmt != "commit":
+        raise Exception("Object pointed by HEAD --> {0} is not a commit".format(headCommitHash))
+    
+
+
     
 
 
