@@ -517,6 +517,31 @@ def tree_checkout(repo, tree, path):
 argsp = argsubparsers.add_parser("commit", help="Commit the current state of the working directory")
 argsp.add_argument("message", help="mention the commit message")
 
+def createTree(path=None):
+    repo = repo_find()
+    if (path == None):
+        path = repo.worktree
+    content = os.listdir(path)
+    treeContent = list()
+    for files in content:
+        dest = os.path.join(path, content)
+        if os.path.isfile(dest):
+            with open(dest, "rb") as f:
+                data = f.read()
+            blobObj = vcsBlob(repo, data)
+            sha = object_write(blobObj)
+            mode = os.stat(dest).encode()
+            leafObj = vcsTreeLeaf(mode, dest.encode(), sha)
+            treeContent.append(leafObj)
+        else:
+            # when the given files is a directory
+            pass
+    treeObj = vcsTree(repo)
+    treeObj.items = treeContent
+    return treeObj
+    
+
+
 # cmd_* function definitions
 def cmd_init(args):
     """calling function for init command"""
@@ -578,6 +603,16 @@ def cmd_checkout(args):
         os.makedirs(args.path)
     
     tree_checkout(repo, obj, os.path.realpath(args.path).encode())
+
+def cmd_commit(args):
+    """calling function for vcs commit function"""
+    if not args.message:
+        raise Exception("Commit message is empty")
+    
+    treeHash = createTree()
+
+    
+
 
 def main(argv = sys.argv[1:]):
     args = argparser.parse_args(argv)
