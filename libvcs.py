@@ -568,6 +568,9 @@ def getObjectFormat(repo, sha):
     return fmt
 
 
+# todo: Have to create a function which will check if the contact configuration is set or not, if not, prompt user (prompting to be done in main function)
+# this contact info will be used in forming the commit message
+
 # cmd_* function definitions
 def cmd_init(args):
     """calling function for init command"""
@@ -653,7 +656,9 @@ def cmd_commit(args):
     fmt = getObjectFormat(repo, headCommitHash)
     if fmt != "commit":
         raise Exception("Object pointed by HEAD --> {0} is not a commit".format(headCommitHash))
-    
+    # get author and commiter email address
+    # to be done next
+    # todo written a little above
 
 
     
