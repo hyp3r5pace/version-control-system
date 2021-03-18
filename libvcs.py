@@ -517,7 +517,12 @@ def tree_checkout(repo, tree, path):
 argsp = argsubparsers.add_parser("commit", help="Commit the current state of the working directory")
 argsp.add_argument("message", help="mention the commit message")
 
-def createTree(path=None):
+def createTree(path=None, actually_write=True):
+    """Creates a tree object of the whole repo"""
+    """ Todo 
+        1. Add a verbose mode to this object creation (which will be turned on by passing a flag in the commit command argument)
+        2. Provide a way to check if any changes were made since last commit in the worktree and if not, print "nothing to commit"
+    """ 
     repo = repo_find()
     if (path == None):
         path = repo.worktree
@@ -529,7 +534,7 @@ def createTree(path=None):
             with open(dest, "rb") as f:
                 data = f.read()
             blobObj = vcsBlob(repo, data)
-            sha = object_write(blobObj)
+            sha = object_write(blobObj, actually_write)
             mode = str(os.stat(dest).st_mode).encode()
             leafObj = vcsTreeLeaf(mode, dest.encode(), sha)
             treeContent.append(leafObj)
@@ -541,7 +546,7 @@ def createTree(path=None):
     
     treeObj = vcsTree(repo)
     treeObj.items = treeContent
-    sha = object_write(treeObj)
+    sha = object_write(treeObj, actually_write)
     if path is None:
         return sha
     else:
