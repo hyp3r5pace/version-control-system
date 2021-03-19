@@ -528,6 +528,8 @@ def tree_checkout(repo, tree, path):
                 f.write(obj.blobdata)
 
 # subparser for commit command
+"""command format: vcs commit [message] [-a]"""
+"""This command commits the current state of the worktree"""
 argsp = argsubparsers.add_parser("commit", help="Commit the current state of the working directory")
 argsp.add_argument("message", help="mention the commit message")
 argsp.add_argument("-a", action="store_true", help="flag to indicate current user is only author of commit not commiter")
@@ -620,13 +622,19 @@ def getUserInfo():
     path = repo_file(repo, "userInfo")
     f = open(path)
     content = f.read()
-    parser = ConfigParser()
+    parser = configparser.ConfigParser()
     parser.read.string(content)
     name = parser["info"]["name"]
     email = parser["info"]["email"]
 
     return name, email
 
+# subparser for vcs set command
+"""command format: vcs set [name] [email]"""
+"""Set the values of variables in config files present in vcs"""
+argsp = argsubparsers.add_subparsers("set", help="set values of variables in config files")
+argsp.add_argument("name", help="set the name of the user")
+argsp.add_argument("email", help="set the email id of the user")
 
 # cmd_* function definitions
 def cmd_init(args):
@@ -733,6 +741,23 @@ def cmd_commit(args):
     print("commit message: {0}\n".format(args.message)) 
 
 
+def cmd_set(args):
+    """calling function for vcs set function"""
+    repo = repo_find()
+    path = repo_file(repo, "userInfo")
+    f = open(path)
+    content = f.read()
+    parser = configparser.ConfigParser()
+    parser.read.string(content)
+    if args.name:
+        parser["info"]["name"] = args.name
+    if args.email:
+        parser["info"]["email"] = args.email
+    
+    with open(path, "w") as f:
+        config.write(f)
+
+
 
 def main(argv = sys.argv[1:]):
     args = argparser.parse_args(argv)
@@ -753,4 +778,5 @@ def main(argv = sys.argv[1:]):
     elif args.command == "rm"                  : cmd_rm(args)
     elif args.command == "show-ref"            : cmd_show_ref(args)
     elif args.command == "tag"                 : cmd_tag(args)
+    elif args.command == "set"                 : cmd_set(args)
 
