@@ -103,6 +103,10 @@ def repo_create(path):
         config = repo_default_config()
         config.write(f)
     
+    with open(repo_file(repo, "userInfo"), "w") as f:
+        config = repo_userInfo_config()
+        config.write(f)
+    
     return repo
 
 
@@ -116,7 +120,16 @@ def repo_default_config():
     ret.set("core", "repositoryformatversion", "0")
     ret.set("core", "filemode", "false")
     ret.set("core", "bare", "false")
+    return ret
 
+
+def repo_userInfo_config():
+    """Defines the config file structure and returns the configparser object for UserInfo file"""
+    # config files is of microsoft INI format
+    ret = configparser.ConfigParser()
+    ret.add_section("info")
+    ret.set("info", "name", "")
+    ret.set("info", "email", "")
     return ret
 
 
@@ -485,6 +498,7 @@ def logGraph(repo, sha, seen):
         print("c_{0} <- c_{1}".format(sha, p))
         logGraph(repo, p, seen)
 
+
 # subparser for ls-tree command
 """command format: vcs ls-tree [object]"""
 """ This commands pretty prints the tree object provided as argument""" 
@@ -516,6 +530,7 @@ def tree_checkout(repo, tree, path):
 # subparser for commit command
 argsp = argsubparsers.add_parser("commit", help="Commit the current state of the working directory")
 argsp.add_argument("message", help="mention the commit message")
+argsp.add_argument("-a", action="store_true", help="flag to indicate current user is only author of commit not commiter")
 
 def createTree(path=None, actually_write=True):
     """Creates a tree object of the whole repo"""
@@ -570,6 +585,48 @@ def getObjectFormat(repo, sha):
 
 # todo: Have to create a function which will check if the contact configuration is set or not, if not, prompt user (prompting to be done in main function)
 # this contact info will be used in forming the commit message
+
+def promptUserInfo():
+    """Function to prompt user to set user name and email id if missing"""
+    repo = repo_find()
+    path = repo_file(repo, "userInfo")
+    if not os.path.exists(path):
+        raise Exception("{0} doesn't exist".format(path))
+    # this exception for the case if a directory of the same name is created in .vcs but file doesn't exist
+    if not os.path.isfile(path):
+        raise Exception("{0} is not a file".format(path))
+    
+    f = open(path)
+    content = f.read()
+
+    parser = ConfigParser()
+    parser.read.string(content)
+
+    if not parser["info"]["name"]:
+        print("User name missing")
+        # todo: print the set user config command syntax here
+        print("Set user name using command")
+        exit()
+    
+    if not parser["info"]["email"]:
+        print("User email missing")
+        # todo: print the set user config command syntax here
+        print("Set user email using command")
+        exit()
+
+def getUserInfo():
+    """Function to fetch user name and email id from userInfo config file"""
+    repo = repo_find()
+    path = repo_file(repo, "userInfo")
+    f = open(path)
+    content = f.read()
+    parser = ConfigParser()
+    parser.read.string(content)
+    name = parser["info"]["name"]
+    email = parser["info"]["email"]
+
+    return name, email
+
 
 # cmd_* function definitions
 def cmd_init(args):
@@ -633,19 +690,22 @@ def cmd_checkout(args):
     
     tree_checkout(repo, obj, os.path.realpath(args.path).encode())
 
+
 def cmd_commit(args):
     """calling function for vcs commit function"""
     if not args.message:
         raise Exception("Commit message is empty")
     repo = repo_find()
+    dct = collections.OrderedDict()
 
-    treeHash = createTree()
+    treeHash = createTree().encode()
     headPath = os.path.join(repo, "HEAD")
     if not os.path.exists(headPath):
         raise Exception("{0} doesn't exist".format(headPath))
     if not os.path.isfile(headPath):
         raise Exception("{0} is not a file".format(headPath))
 
+    # HEAD file is expected to have commit hash in ascii string format
     f = open(headPath)
     headCommitHash = f.read()
     
@@ -656,16 +716,29 @@ def cmd_commit(args):
     fmt = getObjectFormat(repo, headCommitHash)
     if fmt != "commit":
         raise Exception("Object pointed by HEAD --> {0} is not a commit".format(headCommitHash))
-    # get author and commiter email address
-    # to be done next
-    # todo written a little above
+    
+    name, email = getUserInfo()
 
+    # todo: add optional pgp signature component of commit
+    dct[b'tree'] = treeHash.encode()
+    dct[b'parent'] = headCommitHash.encode()
+    dct[b'author'] = name.encode() + b' ' + email.encode()
+    if not args.a:
+        dct[b'committer'] = name.encode() + b' ' + email.encode()
+    dct[b'message'] = args.message.encode()
+    commitObj = vcsCommit(repo)
+    commitObj.commitData = dct
+    sha = object_write(commitObj)
+    print("commit hash: {0}".format(sha))
+    print("commit message: {0}\n".format(args.message)) 
 
     
 
 
 def main(argv = sys.argv[1:]):
     args = argparser.parse_args(argv)
+    # check if user email and name is present or not
+    promptUserInfo()
 
     if args.command == "add"                   : cmd_add(args)
     elif args.command == "cat-file"            : cmd_cat_file(args)
