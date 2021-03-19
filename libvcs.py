@@ -583,7 +583,7 @@ def getObjectFormat(repo, sha):
     return fmt
 
 
-# todo: Have to create a function which will check if the contact configuration is set or not, if not, prompt user (prompting to be done in main function)
+
 # this contact info will be used in forming the commit message
 
 def promptUserInfo():
@@ -732,7 +732,6 @@ def cmd_commit(args):
     print("commit hash: {0}".format(sha))
     print("commit message: {0}\n".format(args.message)) 
 
-    
 
 
 def main(argv = sys.argv[1:]):
