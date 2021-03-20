@@ -632,7 +632,7 @@ def getUserInfo():
 # subparser for vcs set command
 """command format: vcs set [name] [email]"""
 """Set the values of variables in config files present in vcs"""
-argsp = argsubparsers.add_subparsers("set", help="set values of variables in config files")
+argsp = argsubparsers.add_parser("set", help="set values of variables in config files")
 argsp.add_argument("name", help="set the name of the user")
 argsp.add_argument("email", help="set the email id of the user")
 
@@ -703,6 +703,8 @@ def cmd_commit(args):
     """calling function for vcs commit function"""
     if not args.message:
         raise Exception("Commit message is empty")
+    # check if user email and name is present or not
+    promptUserInfo()
     repo = repo_find()
     dct = collections.OrderedDict()
 
@@ -761,8 +763,6 @@ def cmd_set(args):
 
 def main(argv = sys.argv[1:]):
     args = argparser.parse_args(argv)
-    # check if user email and name is present or not
-    promptUserInfo()
 
     if args.command == "add"                   : cmd_add(args)
     elif args.command == "cat-file"            : cmd_cat_file(args)
