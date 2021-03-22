@@ -564,7 +564,7 @@ def createTree(path=None, actually_write=True):
     treeObj = vcsTree(repo)
     treeObj.items = treeContent
     sha = object_write(treeObj, actually_write)
-    if path is None:
+    if path == repo.worktree:
         return sha
     else:
         mode = str(os.stat(path).st_mode).encode()
@@ -601,7 +601,7 @@ def promptUserInfo():
     f = open(path)
     content = f.read()
 
-    parser = ConfigParser()
+    parser = configparser.ConfigParser()
     parser.read_string(content)
 
     if not parser["info"]["name"]:
@@ -709,7 +709,7 @@ def cmd_commit(args):
     dct = collections.OrderedDict()
 
     treeHash = createTree().encode()
-    headPath = os.path.join(repo, "HEAD")
+    headPath = os.path.join(repo.vcsdir, "HEAD")
     if not os.path.exists(headPath):
         raise Exception("{0} doesn't exist".format(headPath))
     if not os.path.isfile(headPath):
@@ -720,7 +720,7 @@ def cmd_commit(args):
     headCommitHash = f.read()
     
     # check if the commit hash (sha-1) exists or not
-    if not os.path.isfile(os.path.join(repo, "objects", headCommitHash[:2])):
+    if not os.path.isfile(os.path.join(repo.vcsdir, "objects", headCommitHash[:2])):
         raise Exception("Commit pointed by HEAD --> {0} doesn't exist".format(headCommitHash))
     # check if the hash in HEAD is a commit object hash
     fmt = getObjectFormat(repo, headCommitHash)
