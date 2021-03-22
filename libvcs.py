@@ -629,6 +629,15 @@ def getUserInfo():
 
     return name, email
 
+def ref_resolve(repo, ref):
+    """Recursively finds the sha-1 of objects referenced by refs"""
+    with open(repo_file(repo, ref), 'r') as fp:
+        data = fp.read()[:-1]
+    if data.startswith("ref: "):
+        return ref_resolve(repo, data[5:])
+    else:
+        return data
+
 # subparser for vcs set command
 """command format: vcs set [name] [email]"""
 """Set the values of variables in config files present in vcs"""
