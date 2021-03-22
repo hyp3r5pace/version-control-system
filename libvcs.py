@@ -602,7 +602,7 @@ def promptUserInfo():
     content = f.read()
 
     parser = ConfigParser()
-    parser.read.string(content)
+    parser.read_string(content)
 
     if not parser["info"]["name"]:
         print("User name missing")
@@ -623,7 +623,7 @@ def getUserInfo():
     f = open(path)
     content = f.read()
     parser = configparser.ConfigParser()
-    parser.read.string(content)
+    parser.read_string(content)
     name = parser["info"]["name"]
     email = parser["info"]["email"]
 
@@ -633,8 +633,8 @@ def getUserInfo():
 """command format: vcs set [name] [email]"""
 """Set the values of variables in config files present in vcs"""
 argsp = argsubparsers.add_parser("set", help="set values of variables in config files")
-argsp.add_argument("name", help="set the name of the user")
-argsp.add_argument("email", help="set the email id of the user")
+argsp.add_argument("--name", default="", help="set the name of the user")
+argsp.add_argument("--email", default="", help="set the email id of the user")
 
 # cmd_* function definitions
 def cmd_init(args):
@@ -750,14 +750,14 @@ def cmd_set(args):
     f = open(path)
     content = f.read()
     parser = configparser.ConfigParser()
-    parser.read.string(content)
+    parser.read_string(content)
     if args.name:
         parser["info"]["name"] = args.name
     if args.email:
         parser["info"]["email"] = args.email
     
     with open(path, "w") as f:
-        config.write(f)
+        parser.write(f)
 
 
 
@@ -779,4 +779,3 @@ def main(argv = sys.argv[1:]):
     elif args.command == "show-ref"            : cmd_show_ref(args)
     elif args.command == "tag"                 : cmd_tag(args)
     elif args.command == "set"                 : cmd_set(args)
-
