@@ -322,7 +322,10 @@ def object_find(repo, name, fmt=None, follow=True):
     """ A name resolution function: Since a vcs object can be refered through various ways such as full hash, short hash,
     tag etc"""
     # unimplemented now (placeholder function) --> will be implemented later
-    return name
+    if name == "HEAD":
+        return ref_resolve(repo, name)
+    else:
+        return name
 
 
 # wrapper class for a single record in the tree
@@ -423,7 +426,10 @@ argsp.add_argument("object",
 
 def cat_file(repo, obj, fmt=None):
     obj = object_read(repo, object_find(repo, obj, fmt=fmt))
-    sys.stdout.buffer.write(obj.serialize())
+    if (fmt == b'commit'):
+        sys.stdout.buffer.write(obj.serialize(obj.commitData))
+    else:
+        sys.stdout.buffer.write(obj.serialize())
 
 
 # subparsers for hash-object command and defining associated arguments
@@ -762,7 +768,7 @@ def cmd_commit(args):
     dct[b''] = args.message.encode()
     commitObj = vcsCommit(repo)
     commitObj.commitData = dct
-    sha = object_write(commitObj)
+    sha = object_write(commitObj, True)
     # updating the HEAD commit
     update_master(repo, sha)
     print("commit hash: {0}".format(sha))
