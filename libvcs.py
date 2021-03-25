@@ -299,7 +299,10 @@ def object_read(repo, sha):
 def object_write(obj, actually_write=True):
     """Creates the vcs object of input data and writes it to a file in compressed form if actually_write is True"""
     # Serialize object data
-    data = obj.serialize() # get the content in byte string format
+    if obj.fmt == b'commit':
+        data = obj.serialize(obj.commitData) # get the content in byte string format
+    else:
+        data = obj.serialize()
     # add header
     result = obj.fmt + b' ' + str(len(data)).encode() + b'\x00' + data
     # compute hash
@@ -630,9 +633,11 @@ def getUserInfo():
     return name, email
 
 def ref_resolve(repo, ref):
-    """Recursively finds the sha-1 of objects referenced by refs"""
+    """Recursively finds the sha-1 of objects referenced by a ref"""
+    if not os.path.isfile(repo_file(repo, ref)):
+        open(repo_file(repo, ref), 'w+') # creating a empty file if not exists
     with open(repo_file(repo, ref), 'r') as fp:
-        data = fp.read()[:-1]
+        data = fp.read()[:-1] # reject the '\n' at the end of the string 
     if data.startswith("ref: "):
         return ref_resolve(repo, data[5:])
     else:
@@ -725,26 +730,28 @@ def cmd_commit(args):
         raise Exception("{0} is not a file".format(headPath))
 
     # HEAD file is expected to have commit hash in ascii string format
-    f = open(headPath)
-    headCommitHash = f.read()
+    headCommitHash = ref_resolve(repo, 'HEAD')
     
-    # check if the commit hash (sha-1) exists or not
-    if not os.path.isfile(os.path.join(repo.vcsdir, "objects", headCommitHash[:2])):
-        raise Exception("Commit pointed by HEAD --> {0} doesn't exist".format(headCommitHash))
-    # check if the hash in HEAD is a commit object hash
-    fmt = getObjectFormat(repo, headCommitHash)
-    if fmt != "commit":
-        raise Exception("Object pointed by HEAD --> {0} is not a commit".format(headCommitHash))
+    if headCommitHash:
+        # check if the commit hash (sha-1) exists or not
+        if not os.path.isfile(os.path.join(repo.vcsdir, "objects", headCommitHash[:2])):
+            raise Exception("Commit pointed by HEAD --> {0} doesn't exist".format(headCommitHash))
+        # check if the hash in HEAD is a commit object hash
+        fmt = getObjectFormat(repo, headCommitHash)
+        if fmt != "commit":
+            raise Exception("Object pointed by HEAD --> {0} is not a commit".format(headCommitHash))
     
     name, email = getUserInfo()
 
     # todo: add optional pgp signature component of commit
-    dct[b'tree'] = treeHash.encode()
-    dct[b'parent'] = headCommitHash.encode()
+    dct[b'tree'] = treeHash
+    if headCommitHash:
+        # add parent if headCommitHash is not empty,ie, first commit will not have a parent commit entry
+        dct[b'parent'] = headCommitHash.encode()
     dct[b'author'] = name.encode() + b' ' + email.encode()
     if not args.a:
         dct[b'committer'] = name.encode() + b' ' + email.encode()
-    dct[b'message'] = args.message.encode()
+    dct[b''] = args.message.encode()
     commitObj = vcsCommit(repo)
     commitObj.commitData = dct
     sha = object_write(commitObj)
