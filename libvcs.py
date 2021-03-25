@@ -643,6 +643,14 @@ def ref_resolve(repo, ref):
     else:
         return data
 
+def update_master(repo, sha):
+    with open(repo_file(repo, 'HEAD'), 'r') as fp:
+        data = fp.read()[:-1] # rejects the '\n' at the end of the string
+    if data.startswith("ref: "):
+        path = data[5:]
+    with open(repo_file(repo, path), 'w+') as fp:
+        fp.write(sha)
+
 # subparser for vcs set command
 """command format: vcs set [name] [email]"""
 """Set the values of variables in config files present in vcs"""
@@ -755,6 +763,8 @@ def cmd_commit(args):
     commitObj = vcsCommit(repo)
     commitObj.commitData = dct
     sha = object_write(commitObj)
+    # updating the HEAD commit
+    update_master(repo, sha)
     print("commit hash: {0}".format(sha))
     print("commit message: {0}\n".format(args.message)) 
 
