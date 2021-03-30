@@ -8,6 +8,5 @@ Commands which work perfectly:
 
 Commands which has bug:
 commit
-init
 log
 checkout (not tried yet)
