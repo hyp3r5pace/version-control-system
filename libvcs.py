@@ -79,8 +79,6 @@ def repo_create(path):
     if os.path.exists(repo.worktree):
         if not os.path.isdir(repo.worktree):
             raise Exception("%s is not a directory" % path)
-        if os.listdir(repo.worktree):
-            raise Exception("%s is not empty" % path)
     else:
         os.makedirs(repo.worktree)
 
@@ -655,7 +653,7 @@ def update_master(repo, sha):
     if data.startswith("ref: "):
         path = data[5:]
     with open(repo_file(repo, path), 'w+') as fp:
-        fp.write(sha)
+        fp.write(sha + '\n')
 
 # subparser for vcs set command
 """command format: vcs set [name] [email]"""
@@ -745,7 +743,7 @@ def cmd_commit(args):
 
     # HEAD file is expected to have commit hash in ascii string format
     headCommitHash = ref_resolve(repo, 'HEAD')
-    
+    print(headCommitHash)
     if headCommitHash:
         # check if the commit hash (sha-1) exists or not
         if not os.path.isfile(os.path.join(repo.vcsdir, "objects", headCommitHash[:2])):

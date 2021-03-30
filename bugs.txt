@@ -1,0 +1,13 @@
+Commands which work perfectly:
+1. vcs init
+2. vcs set
+3. vcs ls-tree
+4. vcs cat-file
+5. vcs hash-object
+
+
+Commands which has bug:
+commit
+init
+log
+checkout (not tried yet)
