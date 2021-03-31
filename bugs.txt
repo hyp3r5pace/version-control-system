@@ -10,3 +10,12 @@ Commands which has bug:
 commit
 log
 checkout (not tried yet)
+ls-tree
+
+Things to do-
+1. Disallow __pycache__, libvcs.py, vcs file from being part of the commit
+2. Todos mentioned in the libvcs.py file
+
+cat-file only returns content of blob files and commit files and for other files, (tree and tag), byte content is printed
+as for tree file, ls-tree command is used for printing the content.
+

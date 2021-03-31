@@ -614,13 +614,13 @@ def promptUserInfo():
     if not parser["info"]["name"]:
         print("User name missing")
         # todo: print the set user config command syntax here
-        print("Set user name using vcs set --name [username]")
+        print("Set user name using command")
         exit()
     
     if not parser["info"]["email"]:
         print("User email missing")
         # todo: print the set user config command syntax here
-        print("Set user email using vcs set --email [email id]")
+        print("Set user email using command")
         exit()
 
 def getUserInfo():
@@ -743,10 +743,12 @@ def cmd_commit(args):
 
     # HEAD file is expected to have commit hash in ascii string format
     headCommitHash = ref_resolve(repo, 'HEAD')
-    print(headCommitHash)
+    # -------------- DEBUG ----------------------
+    # print("Head commit hash --> " + headCommitHash)
+    # -------------------------------------------
     if headCommitHash:
         # check if the commit hash (sha-1) exists or not
-        if not os.path.isfile(os.path.join(repo.vcsdir, "objects", headCommitHash[:2])):
+        if not os.path.isfile(os.path.join(repo.vcsdir, "objects", headCommitHash[:2], headCommitHash[2:])):
             raise Exception("Commit pointed by HEAD --> {0} doesn't exist".format(headCommitHash))
         # check if the hash in HEAD is a commit object hash
         fmt = getObjectFormat(repo, headCommitHash)
