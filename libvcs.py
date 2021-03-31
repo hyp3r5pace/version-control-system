@@ -502,7 +502,7 @@ def logGraph(repo, sha, seen):
     for p in parents:
         # as data is kept in objects in byte string format
         p = p.decode('ascii')
-        print("c_{0} <- c_{1}".format(sha, p))
+        print("c_{0} -> c_{1}".format(sha, p))
         logGraph(repo, p, seen)
 
 
@@ -524,12 +524,15 @@ def tree_checkout(repo, tree, path):
     """Recursively instantiates a tree during checkout into a empty directory"""
     for item in tree.items:
         obj = object_read(repo, item.sha)
-        dest = os.path.join(path, item.path)
+        rootPath = os.path.realpath(os.path.join(repo.vcsdir, '../'))
+        relativePath = item.path.decode().replace(rootPath, '')
+        destRootPath = path
+        dest = destRootPath + relativePath.encode()
 
         if obj.fmt == b'tree':
             os.mkdir(dest)
             # recursively call if the object is tree
-            tree_checkout(repo, obj, dest)
+            tree_checkout(repo, obj, destRootPath)
         elif obj.fmt == b'blob':
             with open(dest, 'wb') as f:
                 f.write(obj.blobdata)
@@ -711,7 +714,7 @@ def cmd_checkout(args):
 
     # deserializing the tree byte object mentioned in commit object
     if obj.fmt == b'commit':
-        obj = object_read(repo, obj.commitData[b'tree'].decode("ascii"))
+        obj = object_read(repo, obj.commitData[b'tree'][0].decode("ascii"))
     
     # verify that the path mentioned in the argument is empty
     if os.path.exists(args.path):
