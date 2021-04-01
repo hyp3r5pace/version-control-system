@@ -8,12 +8,11 @@ Commands which work perfectly:
 7. vcs checkout
 
 Things to do-
-1. Disallow __pycache__, libvcs.py, vcs file from being part of the commit
-2. Todos mentioned in the libvcs.py file
-3. Make viewing of commit logs more closer to git way in terminal
-4. Add verbose and debug mode for the whole library
-5. Provide feature to know that commit is not necessary if no change has incurred in the repo
-6. Add branches facility
+1. Todos mentioned in the libvcs.py file
+2. Make viewing of commit logs more closer to git way in terminal
+3. Add verbose and debug mode for the whole library
+4. Provide feature to know that commit is not necessary if no change has incurred in the repo
+5. Add branches facility
 
 cat-file only returns content of blob files and commit files and for other files, (tree and tag), byte content is printed
 as for tree file, ls-tree command is used for printing the content.

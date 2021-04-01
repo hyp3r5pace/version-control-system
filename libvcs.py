@@ -550,6 +550,7 @@ def createTree(path=None, actually_write=True):
         1. Add a verbose mode to this object creation (which will be turned on by passing a flag in the commit command argument)
         2. Provide a way to check if any changes were made since last commit in the worktree and if not, print "nothing to commit"
     """ 
+    blackList = ['libvcs.py', 'vcs', '__pycache__', '.vcs']
     repo = repo_find()
     if (path == None):
         path = repo.worktree
@@ -558,16 +559,17 @@ def createTree(path=None, actually_write=True):
     for files in content:
         dest = os.path.join(path, files)
         if os.path.isfile(dest):
-            with open(dest, "rb") as f:
-                data = f.read()
-            blobObj = vcsBlob(repo, data)
-            sha = object_write(blobObj, actually_write)
-            mode = str(os.stat(dest).st_mode).encode()
-            leafObj = vcsTreeLeaf(mode, dest.encode(), sha)
-            treeContent.append(leafObj)
+            if files not in blackList:      
+                with open(dest, "rb") as f:
+                    data = f.read()
+                blobObj = vcsBlob(repo, data)
+                sha = object_write(blobObj, actually_write)
+                mode = str(os.stat(dest).st_mode).encode()
+                leafObj = vcsTreeLeaf(mode, dest.encode(), sha)
+                treeContent.append(leafObj)
         else:
             # when the given files is a directory
-            if files != ".vcs":
+            if files not in blackList:
                 leafObj = createTree(dest)
                 treeContent.append(leafObj)
     
