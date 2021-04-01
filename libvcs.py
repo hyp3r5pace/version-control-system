@@ -652,6 +652,22 @@ def ref_resolve(repo, ref):
     else:
         return data
 
+def ref_list(repo, path=None):
+    """Function which returns a sorted ordered dictionary of references and sha values they represent"""
+    if not path:
+        path = repo_dir(repo, "refs")
+    ret = collections.OrderedDict()
+    for f in sorted(os.listdir(path)):
+        ref_path = os.path.join(path, f)
+        if os.path.isdir(ref_path):
+            ret[f] = ref_list(repo, ref_path)
+        else:
+            ret[f] = ref_resolve(repo, ref_path)
+    
+    return ret
+
+
+
 def update_master(repo, sha):
     with open(repo_file(repo, 'HEAD'), 'r') as fp:
         data = fp.read()[:-1] # rejects the '\n' at the end of the string
