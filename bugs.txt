@@ -11,7 +11,7 @@ Things to do-
 1. Todos mentioned in the libvcs.py file
 2. Make viewing of commit logs more closer to git way in terminal
 3. Add verbose and debug mode for the whole library
-4. Provide feature to know that commit is not necessary if no change has incurred in the repo
+4. Provide feature to know that commit is not necessary if no change has incurred in the repo (done)
 5. Add branches facility
 
 cat-file only returns content of blob files and commit files and for other files, (tree and tag), byte content is printed

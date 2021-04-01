@@ -759,6 +759,11 @@ def cmd_commit(args):
         fmt = getObjectFormat(repo, headCommitHash)
         if fmt != "commit":
             raise Exception("Object pointed by HEAD --> {0} is not a commit".format(headCommitHash))
+        # check if changes been made in worktree since last commit
+        obj = object_read(repo, headCommitHash)
+        if obj.commitData[b'tree'][0] == treeHash:
+            print('Nothing to commit. No change in worktree since last commit ({0})'.format(headCommitHash))
+            return
     
     name, email = getUserInfo()
 
