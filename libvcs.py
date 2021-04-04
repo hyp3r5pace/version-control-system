@@ -652,14 +652,12 @@ def promptUserInfo():
 
     if not parser["info"]["name"]:
         print("User name missing")
-        # todo: print the set user config command syntax here
-        print("Set user name using command")
+        print("Set user name using command vcs set --name [username]")
         exit()
     
     if not parser["info"]["email"]:
         print("User email missing")
-        # todo: print the set user config command syntax here
-        print("Set user email using command")
+        print("Set user email using command vcs set --email [email id]")
         exit()
 
 def getUserInfo():
