@@ -469,14 +469,20 @@ def object_hash(fd, fmt, repo=None):
 
 
 # subparser for vcs log command
-"""command format: vcs log [commit]"""
+"""command format: vcs log [commit] [-d]"""
 """ This command print the commit history starting from the commit passed as argument"""
+"""d (dot) flag when passed prints the log in format suitable for graphivz"""
 argsp = argsubparsers.add_parser("log",
                                  help="Display history starting from a given commit")
 argsp.add_argument("commit",
                    default="HEAD",
                    nargs="?",
                    help="commit to start at.")
+
+argsp.add_argument("-d",
+                   dest="dot",
+                   action="store_true",
+                   help="log will be printed in format suitable for graphviz")
 
 def logGraph(repo, sha, seen):
     """ Function to print the log of commits by traversing the graph"""
@@ -504,6 +510,34 @@ def logGraph(repo, sha, seen):
         p = p.decode('ascii')
         print("c_{0} -> c_{1}".format(sha, p))
         logGraph(repo, p, seen)
+
+
+def commitLog(repo, sha, seen):
+    """Function to pretty print the log of commits in the terminal"""
+    if sha in seen.keys():
+        return
+    seen[sha] = object_read(repo, sha)
+
+    # assertion to check, if the object deserialized is a commit object
+    assert(seen[sha].fmt == b'commit')
+
+    print("\n")
+    print("commit id: {0}{1}".format(sha, " (HEAD)" if (len(seen.keys()) == 1) else ""))
+    print("commit message: {0}".format(seen[sha].commitData[b''].decode('ascii')))
+
+    if not b'parent' in seen[sha].commitData.keys():
+        return
+
+    parents = seen[sha].commitData[b'parent']
+
+    if type(parents) != list:
+        parents = [parents]
+    
+    for p in parents:
+        p = p.decode('ascii')
+        commitLog(repo, p, seen)
+
+
 
 
 # subparser for ls-tree command
@@ -707,9 +741,12 @@ def cmd_hash_object(args):
 def cmd_log(args):
     """Calling function for log command"""
     repo = repo_find()
-    print("digraph vcslog{")
-    logGraph(repo, object_find(repo, args.commit), set())
-    print("}")
+    if args.dot:
+        print("digraph vcslog{")
+        logGraph(repo, object_find(repo, args.commit), set())
+        print("}")
+    else:
+        commitLog(repo, object_find(repo, args.commit), dict())
 
 def cmd_ls_tree(args):
     """ Calling function for ls-tree command"""
