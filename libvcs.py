@@ -577,13 +577,10 @@ def tree_checkout(repo, tree, path):
 argsp = argsubparsers.add_parser("commit", help="Commit the current state of the working directory")
 argsp.add_argument("message", help="mention the commit message")
 argsp.add_argument("-a", action="store_true", help="flag to indicate current user is only author of commit not commiter")
+argsp.add_argument("-v", dest="verbose", action="store_true", help="flag to initate verbose mode during commit")
 
-def createTree(path=None, actually_write=True):
+def createTree(path=None, actually_write=True, verbose=False):
     """Creates a tree object of the whole repo"""
-    """ Todo 
-        1. Add a verbose mode to this object creation (which will be turned on by passing a flag in the commit command argument)
-        2. Provide a way to check if any changes were made since last commit in the worktree and if not, print "nothing to commit"
-    """ 
     blackList = ['libvcs.py', 'vcs', '__pycache__', '.vcs']
     repo = repo_find()
     if (path == None):
@@ -601,6 +598,9 @@ def createTree(path=None, actually_write=True):
                 mode = str(os.stat(dest).st_mode).encode()
                 leafObj = vcsTreeLeaf(mode, dest.encode(), sha)
                 treeContent.append(leafObj)
+                if verbose:
+                    print("Added {0} to current commit".format(dest))
+                    print("sha of {0} ----> {1}\n".format(dest, sha))
         else:
             # when the given files is a directory
             if files not in blackList:
@@ -792,7 +792,7 @@ def cmd_commit(args):
     repo = repo_find()
     dct = collections.OrderedDict()
 
-    treeHash = createTree().encode()
+    treeHash = createTree(verbose=args.verbose).encode()
     headPath = os.path.join(repo.vcsdir, "HEAD")
     if not os.path.exists(headPath):
         raise Exception("{0} doesn't exist".format(headPath))
