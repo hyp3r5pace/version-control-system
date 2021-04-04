@@ -10,6 +10,9 @@ Commands which work perfectly:
 Things to do-
 1. Todos mentioned in the libvcs.py file
 2. Make viewing of commit logs more closer to git way in terminal
+    a) Add date, time in commit data and print it in logs
+    b) Add support for branches and merges in this format of vcs (integration)
+    c) Figure out ways to print the data graphically in way "git log --graph" prints 
 3. Add verbose and debug mode for the whole library
 4. Provide feature to know that commit is not necessary if no change has incurred in the repo (done)
 5. Add branches facility
