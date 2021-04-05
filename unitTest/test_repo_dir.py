@@ -1,9 +1,11 @@
 import unittest
+import os
+import sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from random_word import RandomWords
 from libvcs import repo_create
 from libvcs import repo_dir
 from libvcs import vcsRepository
-import os
 import configparser
 
 class repo_dir_test(unittest.TestCase):
