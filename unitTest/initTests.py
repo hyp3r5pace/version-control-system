@@ -1,15 +1,14 @@
 import unittest
+import uuid
 import os
 import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from libvcs import repo_create
 import configparser
-from random_word import RandomWords
 
 class initTest(unittest.TestCase):
     # testcase: empty directory
     def test_init_1(self):
-        r = RandomWords()
         dest = './test/testFiles/init'
         if not os.path.exists(dest):
             os.makedirs(dest)
@@ -17,9 +16,9 @@ class initTest(unittest.TestCase):
         print('TestCase 1')
         print('Case: Empty Directory')
         print('--------------\n')
-        path = dest+'/'+ r.get_random_word()
+        path = dest+'/'+ str(uuid.uuid4())
         if os.path.exists(path):
-            path = dest + '/' + r.get_random_word()
+            path = dest + '/' + str(uuid.uuid4())
         else:
             os.makedirs(path)
         # calling the function to be tested
@@ -195,7 +194,8 @@ class initTest(unittest.TestCase):
         for f in tmp_files:
             x = os.path.join(tmp, f)
             t = os.listdir(x)
-            self.assertEqual(len(t), 0)     
+            self.assertEqual(len(t), 0)
+        os.system('rm -rf ' + path)     
 
 if __name__ == "__main__":
     unittest.main()

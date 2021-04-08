@@ -5,12 +5,11 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from libvcs import repo_create
 from libvcs import repo_find
 from libvcs import vcsRepository
-from random_word import RandomWords
+import uuid
 import configparser
 
 class repo_find_test(unittest.TestCase):
     def test_repo_find_1(self):
-        r = RandomWords()
         dest = './test/testFiles/repo_find'
         if not os.path.exists(dest):
             os.makedirs(dest)
@@ -18,9 +17,9 @@ class repo_find_test(unittest.TestCase):
         print('TestCase 1')
         print('Case: Empty worktree and path is set at root of directory')
         print('--------------\n')
-        path = dest+'/'+ r.get_random_word()
+        path = dest+'/'+ str(uuid.uuid4())
         if os.path.exists(path):
-            path = dest + '/' + r.get_random_word()
+            path = dest + '/' + str(uuid.uuid4())
         else:
             os.makedirs(path)
         # creating the .vcs directory
@@ -37,7 +36,6 @@ class repo_find_test(unittest.TestCase):
         os.system('rm -rf ' + path)
 
     def test_repo_find_2(self):
-        r = RandomWords()
         dest = './test/testFiles/repo_find'
         if not os.path.exists(dest):
             os.makedirs(dest)
@@ -45,9 +43,9 @@ class repo_find_test(unittest.TestCase):
         print('\nTestCase 2')
         print('Case: Non Empty worktree and path is not set at root of directory')
         print('--------------\n')
-        path = dest+'/'+ r.get_random_word()
+        path = dest+'/'+ str(uuid.uuid4())
         if os.path.exists(path):
-            path = dest + '/' + r.get_random_word()
+            path = dest + '/' + str(uuid.uuid4())
         else:
             os.makedirs(path)
         # creating the .vcs directory
@@ -81,7 +79,6 @@ class repo_find_test(unittest.TestCase):
         os.system('rm -rf ' + path)
 
     def test_repo_find_3(self):
-        r = RandomWords()
         dest = './test/testFiles/repo_find'
         if not os.path.exists(dest):
             os.makedirs(dest)
@@ -89,9 +86,9 @@ class repo_find_test(unittest.TestCase):
         print('\nTestCase 3')
         print("Case: Non Empty worktree, path is not set at root of directory and .vcs directory doesn't exist")
         print('--------------\n')
-        path = dest+'/'+ r.get_random_word()
+        path = dest+'/'+ str(uuid.uuid4())
         if os.path.exists(path):
-            path = dest + '/' + r.get_random_word()
+            path = dest + '/' + str(uuid.uuid4())
         else:
             os.makedirs(path)
         # creating files and aditional subdirs

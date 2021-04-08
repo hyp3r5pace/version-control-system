@@ -301,6 +301,9 @@ def object_write(obj, actually_write=True):
         data = obj.serialize(obj.commitData) # get the content in byte string format
     else:
         data = obj.serialize()
+    
+    if type(data) == str:
+        data = data.encode()
     # add header
     result = obj.fmt + b' ' + str(len(data)).encode() + b'\x00' + data
     # compute hash
