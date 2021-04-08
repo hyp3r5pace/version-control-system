@@ -7,7 +7,6 @@ import hashlib
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from libvcs import object_hash
 from libvcs import repo_create
-import configparser
 
 class obj_hash_test(unittest.TestCase):
     def test_obj_hash_1(self):

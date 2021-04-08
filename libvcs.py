@@ -678,8 +678,10 @@ def getUserInfo():
 
 def ref_resolve(repo, ref):
     """Recursively finds the sha-1 of objects referenced by a ref"""
+    if not os.path.exists(os.path.realpath(os.path.join(repo.vcsdir, ref, '..'))):
+        raise Exception("Directory missing: {0}".format(os.path.realpath(os.path.join(repo.vcsdir, ref, '..'))))
     if not os.path.isfile(repo_file(repo, ref)):
-        open(repo_file(repo, ref), 'w+') # creating a empty file if not exists
+        raise Exception('Ref file missing: {0}'.format(os.path.realpath(repo_file(repo, ref))))
     with open(repo_file(repo, ref), 'r') as fp:
         data = fp.read()[:-1] # reject the '\n' at the end of the string 
     if data.startswith("ref: "):
