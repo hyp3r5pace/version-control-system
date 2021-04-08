@@ -16,10 +16,8 @@ Things to do-
 3. Add verbose and debug mode for the whole library
 4. Provide feature to know that commit is not necessary if no change has incurred in the repo (done)
 5. Add branches facility
+6. Update the documentation (README file) (add more to it, update with gifs of working of vcs)
 
 cat-file only returns content of blob files and commit files and for other files, (tree and tag), byte content is printed
 as for tree file, ls-tree command is used for printing the content.
 
-dependency: (create requirements.txt file for installing dependecy and mention it in documentation)
-for testing in init function test:
-1. pip3 install random-word
