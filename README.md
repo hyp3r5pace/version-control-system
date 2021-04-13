@@ -1,16 +1,7 @@
-# version-control-system
+# DOCUMENTATION
+
+## version-control-system
 Version control system implemented in python
-
-## TODO
-
-- [X] vcs init --> command to initialize a vcs directory in a empty repository
-- [X] vcs hash-object --> command to create object-ID of a file, commit etc and optionally store it in database/memory disk.
-- [X] vcs cat-file  --> command to create appropiate vcs python object (deserialize) from serialized vcs objects stored in files
-- [X] vcs commit --> command to form commit and write it in log
-- [X] vcs log --> command to get commit history
-- [X] vcs ls-tree --> command to pretty print a tree object
-- [x] vcs checkout --> command to instantiate a tree in the file system (tree represented by a commit)
-
 
 ## List of commands
 
@@ -91,4 +82,15 @@ Version control system implemented in python
     This command pretty prints the tree object provided as argument. The hash value of the tree object is passed as the argument.
     The hash value of tree object can be obtained from a commit object. By pretty printing a commit object using vcs cat-file command, hash value of a tree object can be obtained.  
 
+- ### vcs commit
+    ```
+    command format: vcs commit [commit message]
+    ```
+    This command basically creates a snapshot of the current directory and stores it in the .vcs directory and returns a commit hashvalue (commit id), which is the id of the snapshot. Each snapshot stores the state of the directory at the point of time when commit command is executed. The latest commit is also referred to as HEAD commit.
+    HEAD: Latest commit (last commit of a repository).
+    It is essential to provide a commit message while executing a commit command. Without a commit message, a commit command will not execute. A commit message should be meaningful, which explains what are the changes that are being made in the repository since last commit.  
+    If no changes has been made since last commit in the current repository, no commit will be done. In such case, following message will be displayed:  
+    ```
+    Nothing to commit. No change in worktree since last commit [HEAD commit hash]
+    ```
 
