@@ -93,4 +93,9 @@ Version control system implemented in python
     ```
     Nothing to commit. No change in worktree since last commit [HEAD commit hash]
     ```
-
+  
+- ### vcs checkout
+    ```
+      command format: vcs checkout [commit] [path]
+    ```
+    This command stores the previous state of the current repository which is marked by a commit previously made, in a empty directory pointed by the [path] argument. Thus, this command helps the user to rollback to a previous version of the current repository. The _path_ should point to a empty directory and the _commit_ passed as argument should be valid. Both the arguments _commit_ and _path_ are required. One can checkout to the latest commit by passing HEAD as the value of the _commit_ argument instead of the commit hash value.
