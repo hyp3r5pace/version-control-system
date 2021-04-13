@@ -104,7 +104,7 @@ Version control system implemented in python
     ```
     command format: vcs set [--name] [--email]
     ```
-    This command basically sets the user name and email-id of a person. This information is included in the commit as the commit author contact information or committer contact information. This is important so that in future, other people using the repository can identify which person made certain changes to the repository. This helps to establish a decentralized elementary blame system for the changes made in the repository, which is used by many people. To set or update the username, pass the --name flag succeded with the username and to set or update the email-id, pass the --email flag succeded with the email-id. 
+    This command basically sets the user name and email-id of a person. This information is included in the commit as the commit author contact information or committer contact information. This is important so that in future, other people using the repository can identify which person made certain changes to the repository. This helps to establish a decentralized elementary blame system for the changes made in the repository, which is used by many people. To set or update the username, pass the _name_ flag succeded with the username and to set or update the email-id, pass the _email_ flag succeded with the email-id. 
 
 
 - ### vcs checkout
