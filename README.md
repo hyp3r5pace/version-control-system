@@ -93,12 +93,23 @@ Version control system implemented in python
     ```
     Nothing to commit. No change in worktree since last commit [HEAD commit hash]
     ```
-  
+    **NOTE**  
+    ```
+    Make sure to set the user name and email-id using the [vcs set command] before using the vcs commit command for the first time. User name and email-id is included in the commit object to identify the author of the commit.
+    ```
+
+- ### vcs set
+    ```
+    command format: vcs set [--name] [--email]
+    ```
+    This command basically sets the user name and email-id of a person. This information is included in the commit as the commit author contact information or committer contact information. This is important so that in future, other people using the repository can identify which person made certain changes to the repository. This helps to establish a decentralized elementary blame system for the changes made in the repository, which is used by many people. To set or update the username, pass the --name flag succeded with the username and to set or update the email-id, pass the --email flag succeded with the email-id. 
+
+
 - ### vcs checkout
     ```
       command format: vcs checkout [commit] [path]
     ```
     This command stores the previous state of the current repository which is marked by a commit previously made, in a empty directory pointed by the [path] argument. Thus, this command helps the user to rollback to a previous version of the current repository. The _path_ should point to a empty directory and the _commit_ passed as argument should be valid. Both the arguments _commit_ and _path_ are required. One can checkout to the latest commit by passing HEAD as the value of the _commit_ argument instead of the commit hash value.  
-    
-     
+
+
     If path doesn't exist, then the _path_ will be created or if the directory doesn't exist, then a empty directory of the same name will be created where the rollback version of the repository will be initalized.
