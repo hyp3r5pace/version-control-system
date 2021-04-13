@@ -82,4 +82,13 @@ Version control system implemented in python
     command: vcs log -d <commit hash> >> log.dot  
     command: dot -O -Tpdf log.dot
     ```
-    **Note**: Install Graphviz as dependency
+    **Note**: Install Graphviz as dependency  
+      
+- ### vcs ls-tree
+    ```
+    command format: vcs ls-tree [tree object hash]
+    ```
+    This command pretty prints the tree object provided as argument. The hash value of the tree object is passed as the argument.
+    The hash value of tree object can be obtained from a commit object. By pretty printing a commit object using vcs cat-file command, hash value of a tree object can be obtained.  
+
+
