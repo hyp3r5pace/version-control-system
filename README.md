@@ -69,7 +69,10 @@ Version control system implemented in python
     command format: vcs cat-file TYPE OBJECT
     ``` 
     This command reads a file storing the serialized object and then deserializes it into a python object of class TYPE.
-    This command does the opposite of what command hash-object does. While deserializing, this command checks if object size matches the size mentioned in file, thus, data malformation is detected.
+    This command does the opposite of what command hash-object does. While deserializing, this command checks if object size matches the size mentioned in file, thus, data malformation is detected.  
+      
+    ![vcs cat-file screenshot](https://github.com/hyp3r5pace/version-control-system/blob/9a584e77ed84b6d0908c1a7c06f09a174311eebe/screenshots/Screenshot%20(306).png)  
+      
 
 - ### vcs log
     ```
@@ -84,12 +87,18 @@ Version control system implemented in python
     ```
     **Note**: Install Graphviz as dependency  
       
+    ![vcs log screenshot](https://github.com/hyp3r5pace/version-control-system/blob/9a584e77ed84b6d0908c1a7c06f09a174311eebe/screenshots/Screenshot%20(305).png)  
+      
+      
 - ### vcs ls-tree
     ```
     command format: vcs ls-tree [tree object hash]
     ```
     This command pretty prints the tree object provided as argument. The hash value of the tree object is passed as the argument.
     The hash value of tree object can be obtained from a commit object. By pretty printing a commit object using vcs cat-file command, hash value of a tree object can be obtained.  
+      
+    ![vcs ls-tree screenshot](https://github.com/hyp3r5pace/version-control-system/blob/9a584e77ed84b6d0908c1a7c06f09a174311eebe/screenshots/Screenshot%20(307).png)  
+      
 
 - ### vcs commit
     ```
@@ -109,15 +118,19 @@ Version control system implemented in python
     Make sure to set the user name and email-id using the [vcs set command] before using the vcs commit  
     command for the first time. User name and email-id is included in the commit object to identify the  
     author of the commit.
-    ```
+    ```  
+      
+    ![vcs commit screenshot](https://github.com/hyp3r5pace/version-control-system/blob/9a584e77ed84b6d0908c1a7c06f09a174311eebe/screenshots/Screenshot%20(304).png)  
+      
 
+    
 - ### vcs set
     ```
     command format: vcs set [--name] [--email]
     ```
-    This command basically sets the user name and email-id of a person. This information is included in the commit as the commit author contact information or committer contact information. This is important so that in future, other people using the repository can identify which person made certain changes to the repository. This helps to establish a decentralized elementary blame system for the changes made in the repository, which is used by many people. To set or update the username, pass the _name_ flag succeded with the username and to set or update the email-id, pass the _email_ flag succeded with the email-id. 
-
-
+    This command basically sets the user name and email-id of a person. This information is included in the commit as the commit author contact information or committer contact information. This is important so that in future, other people using the repository can identify which person made certain changes to the repository. This helps to establish a decentralized elementary blame system for the changes made in the repository, which is used by many people. To set or update the username, pass the _name_ flag succeded with the username and to set or update the email-id, pass the _email_ flag succeded with the email-id.  
+      
+    
 - ### vcs checkout
     ```
       command format: vcs checkout [commit] [path]
@@ -125,4 +138,10 @@ Version control system implemented in python
     This command stores the previous state of the current repository which is marked by a commit previously made, in a empty directory pointed by the [path] argument. Thus, this command helps the user to rollback to a previous version of the current repository. The _path_ should point to a empty directory and the _commit_ passed as argument should be valid. Both the arguments _commit_ and _path_ are required. One can checkout to the latest commit by passing HEAD as the value of the _commit_ argument instead of the commit hash value.  
 
 
-    If path doesn't exist, then the _path_ will be created or if the directory doesn't exist, then a empty directory of the same name will be created where the rollback version of the repository will be initalized.
+    If path doesn't exist, then the _path_ will be created or if the directory doesn't exist, then a empty directory of the same name will be created where the rollback version of the repository will be initalized.  
+      
+    ![vcs first commit state screenshot](https://github.com/hyp3r5pace/version-control-system/blob/9a584e77ed84b6d0908c1a7c06f09a174311eebe/screenshots/Screenshot%20(303).png)  
+      
+    ![vcs checkout screenshot](https://github.com/hyp3r5pace/version-control-system/blob/9a584e77ed84b6d0908c1a7c06f09a174311eebe/screenshots/Screenshot%20(310).png)  
+      
+    
