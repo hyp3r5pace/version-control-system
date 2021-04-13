@@ -95,8 +95,9 @@ Version control system implemented in python
     ```
     **NOTE**  
     ```
-    Make sure to set the user name and email-id using the [vcs set command] before using the vcs commit command for the first  
-    time. User name and email-id is included in the commit object to identify the author of the commit.
+    Make sure to set the user name and email-id using the [vcs set command] before using the vcs commit  
+    command for the first time. User name and email-id is included in the commit object to identify the  
+    author of the commit.
     ```
 
 - ### vcs set
