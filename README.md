@@ -34,7 +34,12 @@ Version control system implemented in python
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|_ _ heads (directory)  
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|  
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|_ _ description (file which stores the description of the repository)  
-    ![vcs init screenshot](https://github.com/hyp3r5pace/version-control-system/blob/6612d810ad7c75c56f3e664d4063b54b6764c11f/screenshots/Screenshot%20(300).png)
+      
+    
+    ![vcs init screenshot](https://github.com/hyp3r5pace/version-control-system/blob/6612d810ad7c75c56f3e664d4063b54b6764c11f/screenshots/Screenshot%20(300).png)  
+      
+    ![.vcs directory screenshot](https://github.com/hyp3r5pace/version-control-system/blob/cd3eb85a8f042dbc615fb231f8030f42c320ecf8/screenshots/Screenshot%20(301).png)  
+
     
 - ### vcs hash-object
     ```
@@ -54,7 +59,10 @@ Version control system implemented in python
     ```
     <header> + <whitespace> + <object size> + <null separator (0x00)> + <byte string of the object>
     ```
-    The content of the file is in byte string format.
+    The content of the file is in byte string format.  
+      
+    ![vcs hash-object screenshot](https://github.com/hyp3r5pace/version-control-system/blob/cd3eb85a8f042dbc615fb231f8030f42c320ecf8/screenshots/Screenshot%20(308).png)  
+      
 
 - ### vcs cat-file
     ```
