@@ -73,6 +73,13 @@ Version control system implemented in python
 
 - ### vcs log
     ```
-    command format: vcs log <commit hash>
+    command format: vcs log [-d] <commit hash>
     ```
-    This command displays the commit history in a repository starting from the commit whose hash value is passed as the argument. At this point, commit information is not displayed but further commit information can be displayed by passing the commit hash to the vcs cat-file function.
+    This command displays the commit history in a repository starting from the commit whose hash value is passed as the argument. At this point, commit information is not displayed but further commit information can be displayed by passing the commit hash to the vcs cat-file function. If [commit hash] is empty, then the commit log is shown from HEAD commit (latest commit).  
+    The optional flag [ -d ] when mentioned leads to commit log being printed in a _graphviz_ format.  
+    - commit log in graphviz format  
+    ```
+    command: vcs log -d <commit hash> >> log.dot  
+    command: dot -O -Tpdf log.dot
+    ```
+    **Note**: Install Graphviz as dependency
