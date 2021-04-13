@@ -84,7 +84,7 @@ Version control system implemented in python
 
 - ### vcs commit
     ```
-    command format: vcs commit [commit message]
+    command format: vcs commit [-a] [commit message]
     ```
     This command basically creates a snapshot of the current directory and stores it in the .vcs directory and returns a commit hashvalue (commit id), which is the id of the snapshot. Each snapshot stores the state of the directory at the point of time when commit command is executed. The latest commit is also referred to as HEAD commit.
     HEAD: Latest commit (last commit of a repository).
@@ -93,6 +93,8 @@ Version control system implemented in python
     ```
     Nothing to commit. No change in worktree since last commit [HEAD commit hash]
     ```
+    The [-a] flag is a optional flag which when provided indicates that the user is only author of the commit and not the commiter of the commit. In this case, the author only creates the commit while some other person who is the commiter, reviews and adds the commit to the commit chain.  
+    
     **NOTE**  
     ```
     Make sure to set the user name and email-id using the [vcs set command] before using the vcs commit  
