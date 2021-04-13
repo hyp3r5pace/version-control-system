@@ -34,6 +34,7 @@ Version control system implemented in python
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|_ _ heads (directory)  
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|  
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|_ _ description (file which stores the description of the repository)  
+    ![vcs init screenshot](https://github.com/hyp3r5pace/version-control-system/blob/6612d810ad7c75c56f3e664d4063b54b6764c11f/screenshots/Screenshot%20(300).png)
     
 - ### vcs hash-object
     ```
@@ -94,7 +95,7 @@ Version control system implemented in python
     Nothing to commit. No change in worktree since last commit [HEAD commit hash]
     ```
     The [-a] flag is a optional flag which when provided indicates that the user is only author of the commit and not the commiter of the commit. In this case, the author only creates the commit while some other person who is the commiter, reviews and adds the commit to the commit chain.  
-    
+
     **NOTE**  
     ```
     Make sure to set the user name and email-id using the [vcs set command] before using the vcs commit  
