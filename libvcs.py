@@ -676,12 +676,17 @@ def getUserInfo():
 
     return name, email
 
+# subparser for vcs show-ref command
+"""command format: vcs show-ref"""
+"""List out all the references of a repository"""
+argsp = argsubparsers.add_parser("show-ref", help="List references")
+
 def ref_resolve(repo, ref):
     """Recursively finds the sha-1 of objects referenced by a ref"""
     if not os.path.exists(os.path.realpath(os.path.join(repo.vcsdir, ref, '..'))):
         raise Exception("Directory missing: {0}".format(os.path.realpath(os.path.join(repo.vcsdir, ref, '..'))))
     if not os.path.isfile(repo_file(repo, ref)):
-        raise Exception('Ref file missing: {0}'.format(os.path.realpath(repo_file(repo, ref))))
+        return ""
     with open(repo_file(repo, ref), 'r') as fp:
         data = fp.read()[:-1] # reject the '\n' at the end of the string 
     if data.startswith("ref: "):
@@ -703,6 +708,17 @@ def ref_list(repo, path=None):
     
     return ret
 
+
+def show_ref(repo, refs, with_hash=True, prefix=""):
+    for k, v in refs.items():
+        if type(v) == str:
+            print("{0}{1}{2}".format(
+                  v + " " if with_hash else "",
+                  prefix + '/' if prefix else "",
+                  k
+            ))
+        else:
+            show_ref(repo, v, with_hash = with_hash, prefix="{0}{1}{2}".format(prefix, "/" if prefix else "", k))
 
 
 def update_master(repo, sha):
@@ -841,8 +857,15 @@ def cmd_commit(args):
     print("commit message: {0}\n".format(args.message)) 
 
 
+def cmd_show_ref(args):
+    """Calling function for vcs show-ref command"""
+    repo = repo_find()
+    refs = ref_list(repo)
+    show_ref(repo, refs, prefix="")
+
+
 def cmd_set(args):
-    """calling function for vcs set function"""
+    """calling function for vcs set command"""
     repo = repo_find()
     path = repo_file(repo, "userInfo")
     f = open(path)

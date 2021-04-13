@@ -97,8 +97,8 @@ class ref_func_test(unittest.TestCase):
             f.write('ref: refs/' + tmp_filename + '\n')
         # calling the function to be tested
         # assertion to check if missing file exception was raised
-        with self.assertRaises(Exception):
-            ref_resolve(repo, filename)
+        hashValue = ref_resolve(repo, filename)
+        self.assertEqual(hashValue, "")
         # deleting the test folder
         os.system('rm -rf ' + path)
 
